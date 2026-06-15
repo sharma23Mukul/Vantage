@@ -1,3 +1,5 @@
+import './styles/index.css';
+
 // app shell — wraps the app with providers and global layout
 function AppShell({ children }) {
   return (
