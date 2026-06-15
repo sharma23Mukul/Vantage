@@ -1,0 +1,37 @@
+:root {
+  /* Colors */
+  --color-void: #0a0a0f;
+  --color-surface: #111118;
+  --color-surface-raised: #1a1a24;
+  --color-accent: #6c63ff;
+  --color-accent-warm: #ff6b6b;
+  --color-text-primary: #f0f0f5;
+  --color-text-secondary: #8888aa;
+  --color-border: rgba(255, 255, 255, 0.08);
+
+  /* Spacing (8pt grid) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+  --space-7: 64px;
+  --space-8: 96px;
+  --space-9: 128px;
+
+  /* Easing */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+
+  /* Typography scale */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+  --text-3xl: 2.75rem;
+  --text-4xl: 3.75rem;
+  --text-5xl: 5rem;
+}
