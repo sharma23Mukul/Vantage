@@ -1,0 +1,8 @@
+/* style loading order matters — tokens first, then type, then resets */
+@import './tokens.css';
+@import './typography.css';
+@import './global.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
