@@ -1,2 +1,2 @@
-// model loader — GLB loading with suspense
-export {};
+export { ModelViewer } from './ui/ModelViewer';
+export { useModelLoader, preloadModel } from './model/useModelLoader';
