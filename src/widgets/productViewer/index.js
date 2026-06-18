@@ -1,2 +1,1 @@
-// product viewer widget
-export {};
+export { ProductViewer } from './ui/ProductViewer';
