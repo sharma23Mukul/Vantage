@@ -1,2 +1,1 @@
-// scroll-linked camera system
-export {};
+export { ScrollCamera } from './ui/ScrollCamera';
