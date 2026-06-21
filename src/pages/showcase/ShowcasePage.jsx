@@ -11,22 +11,22 @@ export default function ShowcasePage() {
       <ProductViewer />
       
       {/* Scrollable Content Layers */}
-      <main className="relative z-0">
-        <section className="h-screen flex items-center p-sp-8">
+      <main className="relative z-0 pointer-events-none">
+        <section className="h-screen flex items-center p-sp-8 pointer-events-auto">
           <div className="max-w-md">
             <h2 className="text-5xl font-syne font-bold mb-sp-4 text-accent">The Duck</h2>
             <p className="text-lg text-text-secondary">Scroll down to explore the features of this 3D masterpiece.</p>
           </div>
         </section>
         
-        <section className="h-screen flex items-center justify-end p-sp-8">
+        <section className="h-screen flex items-center justify-end p-sp-8 pointer-events-auto">
           <div className="max-w-md text-right">
             <h2 className="text-4xl font-syne font-bold mb-sp-4">Sleek Design</h2>
             <p className="text-lg text-text-secondary">Notice the aerodynamic shape and smooth curves, crafted for perfect buoyancy.</p>
           </div>
         </section>
 
-        <section className="h-screen flex items-center p-sp-8">
+        <section className="h-screen flex items-center p-sp-8 pointer-events-auto">
           <div className="max-w-md">
             <h2 className="text-4xl font-syne font-bold mb-sp-4">Classic Yellow</h2>
             <p className="text-lg text-text-secondary">A timeless aesthetic that brings joy to any bathtub environment.</p>
