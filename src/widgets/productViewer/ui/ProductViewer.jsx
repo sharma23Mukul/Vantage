@@ -1,6 +1,7 @@
 import { ModelViewer } from '../../../features/modelLoader';
 import { ScrollCamera } from '../../../features/scrollCamera';
 import { HotspotMarker, HotspotDetails } from '../../../features/hotspots';
+import { VariantApplicator, VariantSelector } from '../../../features/variantSwitcher';
 
 export function ProductViewer() {
   const hotspotsData = [
@@ -23,16 +24,18 @@ export function ProductViewer() {
       <section className="fixed top-0 left-0 w-full h-screen -z-10 pointer-events-auto">
         <ModelViewer url="/models/Duck.glb" enableControls={false}>
           <ScrollCamera />
+          <VariantApplicator url="/models/Duck.glb" />
           {hotspotsData.map((data) => (
             <HotspotMarker key={data.id} position={data.position} data={data} />
           ))}
         </ModelViewer>
       </section>
       
-      {/* 2D Overlay layer for hotspot details */}
+      {/* 2D Overlay layer for UI components */}
       <div className="fixed top-0 left-0 w-full h-screen pointer-events-none z-40">
-        <div className="relative w-full h-full pointer-events-auto">
+        <div className="relative w-full h-full pointer-events-none">
           <HotspotDetails />
+          <VariantSelector />
         </div>
       </div>
     </>
