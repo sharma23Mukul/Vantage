@@ -2,6 +2,7 @@ import { ModelViewer } from '../../../features/modelLoader';
 import { ScrollCamera } from '../../../features/scrollCamera';
 import { HotspotMarker, HotspotDetails } from '../../../features/hotspots';
 import { VariantApplicator, VariantSelector } from '../../../features/variantSwitcher';
+import { VideoApplicator, VideoToggle } from '../../../features/videoTexture';
 
 export function ProductViewer() {
   const hotspotsData = [
@@ -25,6 +26,7 @@ export function ProductViewer() {
         <ModelViewer url="/models/Duck.glb" enableControls={false}>
           <ScrollCamera />
           <VariantApplicator url="/models/Duck.glb" />
+          <VideoApplicator url="/models/Duck.glb" videoUrl="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" />
           {hotspotsData.map((data) => (
             <HotspotMarker key={data.id} position={data.position} data={data} />
           ))}
@@ -36,6 +38,7 @@ export function ProductViewer() {
         <div className="relative w-full h-full pointer-events-none">
           <HotspotDetails />
           <VariantSelector />
+          <VideoToggle />
         </div>
       </div>
     </>
