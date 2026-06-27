@@ -4,6 +4,8 @@ import { HotspotMarker, HotspotDetails } from '../../../features/hotspots';
 import { VariantApplicator, VariantSelector } from '../../../features/variantSwitcher';
 import { VideoApplicator, VideoToggle } from '../../../features/videoTexture';
 import { StudioLighting } from '../../../features/environmentLighting';
+import { CinematicEffects } from '../../../features/postProcessing';
+import { AutoPresentation } from '../../../features/presentationMode';
 
 export function ProductViewer() {
   const hotspotsData = [
@@ -26,12 +28,15 @@ export function ProductViewer() {
       <section className="fixed top-0 left-0 w-full h-screen -z-10 pointer-events-auto">
         <ModelViewer url="/models/Duck.glb" enableControls={false}>
           <StudioLighting />
+          <CinematicEffects />
           <ScrollCamera />
-          <VariantApplicator url="/models/Duck.glb" />
-          <VideoApplicator url="/models/Duck.glb" videoUrl="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" />
-          {hotspotsData.map((data) => (
-            <HotspotMarker key={data.id} position={data.position} data={data} />
-          ))}
+          <AutoPresentation>
+            <VariantApplicator url="/models/Duck.glb" />
+            <VideoApplicator url="/models/Duck.glb" videoUrl="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" />
+            {hotspotsData.map((data) => (
+              <HotspotMarker key={data.id} position={data.position} data={data} />
+            ))}
+          </AutoPresentation>
         </ModelViewer>
       </section>
       
