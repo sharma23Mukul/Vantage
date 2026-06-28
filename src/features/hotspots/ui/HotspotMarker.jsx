@@ -6,22 +6,20 @@ export function HotspotMarker({ position, data }) {
   const activeHotspot = useHotspotsStore((state) => state.activeHotspot);
   const isActive = activeHotspot?.id === data.id;
 
-  const handleClick = (e) => {
-    e.stopPropagation(); // Prevent clicking through to the canvas
-    setActiveHotspot(data);
-  };
-
   return (
-    <Html position={position} center zIndexRange={[100, 0]}>
-      <button 
-        onClick={handleClick}
-        className={`w-6 h-6 rounded-full cursor-pointer transition-all duration-300 flex items-center justify-center border-2 border-void ${isActive ? 'bg-accent scale-125' : 'bg-surface hover:scale-110'}`}
-        aria-label={`View details for ${data.title}`}
-        style={{
-          boxShadow: isActive ? '0 0 15px var(--color-accent)' : '0 2px 4px rgba(0,0,0,0.2)'
+    <Html position={position} center>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          setActiveHotspot(data);
         }}
+        className="group relative flex items-center justify-center cursor-pointer"
+        aria-label={`View details for ${data.title}`}
       >
-        <div className={`w-2 h-2 rounded-full ${isActive ? 'bg-void' : 'bg-accent'}`} />
+        {/* Outer pulse ring */}
+        <span className={`absolute w-8 h-8 rounded-full ${isActive ? 'bg-accent/20' : 'bg-text-primary/10'} animate-ping`} />
+        {/* Inner dot */}
+        <div className={`w-3 h-3 rounded-full border-2 border-white shadow-md ${isActive ? 'bg-accent' : 'bg-text-primary'}`} />
       </button>
     </Html>
   );
