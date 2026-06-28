@@ -8,7 +8,7 @@ export function HotspotDetails() {
   if (!activeHotspot) return null;
 
   return (
-    <div className="absolute bottom-sp-8 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:right-sp-8 z-50 w-[300px] bg-white/50 backdrop-blur-md border border-white/20 p-sp-6 rounded-2xl shadow-md pointer-events-auto">
+    <div className="absolute bottom-[90px] md:bottom-sp-8 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-sp-8 z-50 w-[90vw] md:w-[300px] bg-white/50 backdrop-blur-md border border-white/20 p-sp-4 md:p-sp-6 rounded-2xl shadow-md pointer-events-auto">
       <div className="flex justify-between items-start mb-sp-4">
         <h3 className="font-oswald font-bold text-xl uppercase text-text-primary">{activeHotspot.title}</h3>
         <button 
