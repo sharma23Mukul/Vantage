@@ -2,24 +2,29 @@ import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-export function MouseParallax({ children }) {
+export function MouseParallax({ children, intensity = 0.5 }) {
   const groupRef = useRef();
 
   useFrame((state, delta) => {
     if (!groupRef.current) return;
     
+    // state.pointer holds normalized mouse coordinates (-1 to +1)
     const { x, y } = state.pointer;
+    
+    // Scale by intensity so the model doesn't spin wildly
+    const targetY = x * intensity;
+    const targetX = -y * intensity;
     
     // Use THREE.MathUtils.lerp for smooth, spring-like easing (damping)
     // Formula: lerp(currentValue, targetValue, interpolationFactor)
     groupRef.current.rotation.y = THREE.MathUtils.lerp(
       groupRef.current.rotation.y,
-      x,
+      targetY,
       delta * 5
     );
     groupRef.current.rotation.x = THREE.MathUtils.lerp(
       groupRef.current.rotation.x,
-      -y,
+      targetX,
       delta * 5
     );
   });
