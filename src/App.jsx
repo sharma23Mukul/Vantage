@@ -1,4 +1,4 @@
-import AppShell from './app';
+import AppShell from './app/index.jsx';
 import ShowcasePage from './pages/showcase/ShowcasePage';
 
 function App() {

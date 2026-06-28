@@ -2,7 +2,6 @@ import { ModelViewer } from '../../../features/modelLoader';
 import { ScrollCamera } from '../../../features/scrollCamera';
 import { HotspotMarker, HotspotDetails } from '../../../features/hotspots';
 import { VariantApplicator, VariantSelector } from '../../../features/variantSwitcher';
-import { VideoApplicator, VideoToggle } from '../../../features/videoTexture';
 import { StudioLighting } from '../../../features/environmentLighting';
 import { CinematicEffects } from '../../../features/postProcessing';
 import { AutoPresentation } from '../../../features/presentationMode';
@@ -12,13 +11,13 @@ export function ProductViewer() {
   const hotspotsData = [
     {
       id: 'beak',
-      position: [0, 0.5, 1], // Approximation for Duck.glb
+      position: [0, 0.5, 1],
       title: 'Aerodynamic Beak',
       description: 'Engineered for maximum velocity when moving through water.'
     },
     {
       id: 'tail',
-      position: [0, 0.2, -1], // Approximation for Duck.glb
+      position: [0, 0.2, -1],
       title: 'Stabilizing Tail',
       description: 'Provides pitch perfect balance during turbulent splash scenarios.'
     }
@@ -34,7 +33,6 @@ export function ProductViewer() {
           <AutoPresentation>
             <MouseParallax intensity={0.4}>
               <VariantApplicator url="/models/Duck.glb" />
-              <VideoApplicator url="/models/Duck.glb" videoUrl="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" />
               {hotspotsData.map((data) => (
                 <HotspotMarker key={data.id} position={data.position} data={data} />
               ))}
@@ -48,7 +46,6 @@ export function ProductViewer() {
         <div className="relative w-full h-full pointer-events-none">
           <HotspotDetails />
           <VariantSelector />
-          <VideoToggle />
         </div>
       </div>
     </>
