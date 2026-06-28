@@ -6,6 +6,7 @@ import { VideoApplicator, VideoToggle } from '../../../features/videoTexture';
 import { StudioLighting } from '../../../features/environmentLighting';
 import { CinematicEffects } from '../../../features/postProcessing';
 import { AutoPresentation } from '../../../features/presentationMode';
+import { MouseParallax } from '../../../features/mouseParallax';
 
 export function ProductViewer() {
   const hotspotsData = [
@@ -31,11 +32,13 @@ export function ProductViewer() {
           <CinematicEffects />
           <ScrollCamera />
           <AutoPresentation>
-            <VariantApplicator url="/models/Duck.glb" />
-            <VideoApplicator url="/models/Duck.glb" videoUrl="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" />
-            {hotspotsData.map((data) => (
-              <HotspotMarker key={data.id} position={data.position} data={data} />
-            ))}
+            <MouseParallax intensity={0.4}>
+              <VariantApplicator url="/models/Duck.glb" />
+              <VideoApplicator url="/models/Duck.glb" videoUrl="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" />
+              {hotspotsData.map((data) => (
+                <HotspotMarker key={data.id} position={data.position} data={data} />
+              ))}
+            </MouseParallax>
           </AutoPresentation>
         </ModelViewer>
       </section>
