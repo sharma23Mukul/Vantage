@@ -10,6 +10,16 @@ Interactive 3D product showcase platform built with React, Three.js, and GSAP.
 - **Animation:** GSAP + ScrollTrigger
 - **State:** Zustand
 
+## Features
+
+- **Interactive 3D Rendering:** High-fidelity GLTF model loading via React Three Fiber.
+- **Mouse Responsive Parallax:** The 3D model subtly tracks user cursor movements for an immersive feel.
+- **Scrollytelling:** Deep integration with GSAP ScrollTrigger to tie camera movements to user scroll velocity.
+- **Spatial UI Hotspots:** 2D interactive tooltips perfectly mapped to 3D mesh coordinates.
+- **Dynamic Material Switcher:** Real-time Zustand-powered state management to instantly change 3D materials.
+- **Video Texture Projection:** Stream and project video directly onto the surface of 3D objects.
+- **Feature-Sliced Design:** Architected using FSD principles for massive scalability and maintainability.
+
 ## Getting Started
 
 ```bash
