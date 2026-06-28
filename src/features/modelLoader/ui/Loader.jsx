@@ -4,9 +4,9 @@ export function Loader() {
   const { progress } = useProgress();
   return (
     <Html center>
-      <div className="flex flex-col items-center justify-center text-text-primary whitespace-nowrap bg-surface/80 p-sp-4 rounded-xl backdrop-blur-sm border border-border">
-        <span className="text-3xl font-bold">{progress.toFixed(0)}%</span>
-        <span className="text-sm text-text-secondary mt-sp-2">Loading 3D Experience</span>
+      <div className="flex flex-col items-center justify-center text-text-primary whitespace-nowrap bg-white/50 p-sp-4 rounded-xl backdrop-blur-md border border-white/20 shadow-md">
+        <span className="font-oswald font-bold text-3xl uppercase">{progress.toFixed(0)}%</span>
+        <span className="subheading-editorial mt-sp-2 text-text-secondary">Loading</span>
       </div>
     </Html>
   );

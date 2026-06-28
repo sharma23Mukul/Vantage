@@ -5,24 +5,22 @@ export function CinematicEffects() {
   return (
     <EffectComposer disableNormalPass>
       {/* 
-        Bloom creates a glowing effect around bright objects. 
-        It makes highlights from the HDRI lighting pop beautifully.
+        Bloom — subtle for light theme, just catches shiny material highlights 
       */}
       <Bloom 
-        intensity={0.5} 
-        luminanceThreshold={0.8} 
-        luminanceSmoothing={0.1} 
+        intensity={0.3} 
+        luminanceThreshold={0.9} 
+        luminanceSmoothing={0.05} 
         blendFunction={BlendFunction.SCREEN} 
       />
       
       {/* 
-        Vignette subtly darkens the edges of the screen, 
-        drawing the user's eye toward the center 3D model.
+        Vignette — very subtle on light backgrounds to softly frame the scene 
       */}
       <Vignette 
         eskil={false} 
-        offset={0.1} 
-        darkness={0.6} 
+        offset={0.15} 
+        darkness={0.3} 
         blendFunction={BlendFunction.NORMAL} 
       />
     </EffectComposer>
