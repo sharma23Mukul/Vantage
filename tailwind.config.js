@@ -26,6 +26,7 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        oswald: ['Oswald', 'Impact', 'sans-serif'],
       },
       fontSize: {
         xs: 'var(--text-xs)',
@@ -37,6 +38,9 @@ export default {
         '3xl': 'var(--text-3xl)',
         '4xl': 'var(--text-4xl)',
         '5xl': 'var(--text-5xl)',
+        '6xl': 'var(--text-6xl)',
+        '7xl': 'var(--text-7xl)',
+        '8xl': 'var(--text-8xl)',
       },
       transitionTimingFunction: {
         'out-expo': 'var(--ease-out-expo)',

@@ -1,13 +1,13 @@
 :root {
-  /* Colors */
-  --color-void: #0a0a0f;
-  --color-surface: #111118;
-  --color-surface-raised: #1a1a24;
-  --color-accent: #6c63ff;
-  --color-accent-warm: #ff6b6b;
-  --color-text-primary: #f0f0f5;
-  --color-text-secondary: #8888aa;
-  --color-border: rgba(255, 255, 255, 0.08);
+  /* Colors — Studio Ethereal palette */
+  --color-void: #f7f7f8;
+  --color-surface: rgba(255, 255, 255, 0.4);
+  --color-surface-raised: rgba(255, 255, 255, 0.6);
+  --color-accent: #9b87f5;
+  --color-accent-warm: #e07a5f;
+  --color-text-primary: #2d3748;
+  --color-text-secondary: #718096;
+  --color-border: rgba(0, 0, 0, 0.08);
 
   /* Spacing (8pt grid) */
   --space-1: 4px;
@@ -34,6 +34,9 @@
   --text-3xl: 2.75rem;
   --text-4xl: 3.75rem;
   --text-5xl: 5rem;
+  --text-6xl: 6rem;
+  --text-7xl: 7.5rem;
+  --text-8xl: 9rem;
 
   /* Border radius */
   --radius-sm: 4px;
@@ -42,12 +45,12 @@
   --radius-xl: 24px;
   --radius-full: 9999px;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 40px rgba(108, 99, 255, 0.25);
+  /* Shadows — softer for light theme */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 40px rgba(155, 135, 245, 0.2);
 
-  /* Z-index scale — avoids magic numbers scattered across files */
+  /* Z-index scale */
   --z-base: 0;
   --z-raised: 10;
   --z-overlay: 100;
