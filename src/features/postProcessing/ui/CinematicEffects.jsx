@@ -3,7 +3,7 @@ import { BlendFunction } from 'postprocessing';
 
 export function CinematicEffects() {
   return (
-    <EffectComposer disableNormalPass multisampling={4}>
+    <EffectComposer disableNormalPass>
       {/* 
         Bloom creates a glowing effect around bright objects. 
         It makes highlights from the HDRI lighting pop beautifully.

@@ -22,14 +22,14 @@ function Model({ url }) {
 export function ModelViewer({ url = '/models/Duck.glb', children, enableControls = true }) {
   return (
     <div className="w-full h-full relative bg-void overflow-hidden">
-      <Canvas shadows dpr={[1, 2]} camera={{ position: [0, 0, 5], fov: 50 }}>
+      <Canvas dpr={1} camera={{ position: [0, 0, 5], fov: 50 }}>
         <Suspense fallback={<Loader />}>
-          <Stage environment="city" intensity={0.5}>
+          <Stage environment="city" intensity={0.5} shadows={false}>
             <Model url={url} />
           </Stage>
+          {enableControls && <OrbitControls makeDefault autoRotate autoRotateSpeed={0.5} enableZoom={false} />}
+          {children}
         </Suspense>
-        {enableControls && <OrbitControls makeDefault autoRotate autoRotateSpeed={0.5} enableZoom={false} />}
-        {children}
       </Canvas>
     </div>
   );
