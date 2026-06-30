@@ -18,21 +18,22 @@ export function useScrollCamera() {
     camera.lookAt(0, 0, 0);
 
     // Camera keyframes — one per scroll section
+    // Moved camera further back to accommodate the 2x larger brain
     const keyframes = [
       // 0: Hero → default front view
-      { x: 0, y: 0, z: 4.5 },
+      { x: 0, y: 0, z: 6.5 },
       // 1: Prefrontal → front-right, slightly above
-      { x: 2.5, y: 0.8, z: 3.5 },
+      { x: 3.5, y: 1.5, z: 5.5 },
       // 2: Parietal → above, looking down
-      { x: 0.5, y: 3, z: 3 },
+      { x: 0.5, y: 4.5, z: 4.5 },
       // 3: Occipital → behind and slightly above
-      { x: -2, y: 0.8, z: -3 },
+      { x: -3.5, y: 1.5, z: -4.5 },
       // 4: Temporal → side view
-      { x: 4, y: 0, z: 0.5 },
+      { x: 5.5, y: 0, z: 1.5 },
       // 5: Cerebellum → low angle, front-ish
-      { x: 1, y: -1.5, z: 3.5 },
+      { x: 1.5, y: -2.5, z: 5.0 },
       // 6: Contact → return to front
-      { x: 0, y: 0, z: 4.5 },
+      { x: 0, y: 0, z: 6.5 },
     ];
 
     const tl = gsap.timeline({
@@ -40,7 +41,7 @@ export function useScrollCamera() {
         trigger: '.page-showcase',
         start: 'top top',
         end: 'bottom bottom',
-        scrub: 1.5, // Smoother scrubbing with 1.5s ease
+        scrub: 2.5, // Increased from 1.5 to 2.5 for much smoother, buttery scroll
       },
     });
 
@@ -55,7 +56,7 @@ export function useScrollCamera() {
           x: kf.x,
           y: kf.y,
           z: kf.z,
-          ease: 'power2.inOut',
+          ease: 'sine.inOut', // Changed from power2 to sine for softer acceleration/deceleration
           duration: 1,
         },
         (i - 1) // Position in the timeline

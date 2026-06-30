@@ -26,7 +26,9 @@ export function BrainModel() {
   return (
     <group
       ref={groupRef}
-      scale={0.012}
+      scale={0.024}
+      rotation={[0, -Math.PI / 2, 0]}
+      position={[0, -0.5, 0]}
       onPointerMissed={() => clearActiveHotspot()}
     >
       {BRAIN_REGIONS.map((region, index) => (
