@@ -1,43 +1,18 @@
 import { ModelViewer } from '../../../features/modelLoader';
 import { ScrollCamera } from '../../../features/scrollCamera';
-import { HotspotMarker, HotspotDetails } from '../../../features/hotspots';
-import { VariantApplicator, VariantSelector } from '../../../features/variantSwitcher';
+import { HotspotDetails } from '../../../features/hotspots';
 import { StudioLighting } from '../../../features/environmentLighting';
 import { CinematicEffects } from '../../../features/postProcessing';
-import { AutoPresentation } from '../../../features/presentationMode';
 import { MouseParallax } from '../../../features/mouseParallax';
 
 export function ProductViewer() {
-  const hotspotsData = [
-    {
-      id: 'beak',
-      position: [0, 0.5, 1],
-      title: 'Aerodynamic Beak',
-      description: 'Engineered for maximum velocity when moving through water.'
-    },
-    {
-      id: 'tail',
-      position: [0, 0.2, -1],
-      title: 'Stabilizing Tail',
-      description: 'Provides pitch perfect balance during turbulent splash scenarios.'
-    }
-  ];
-
   return (
     <>
-      <section className="fixed top-0 left-0 w-full h-screen -z-10 pointer-events-auto">
-        <ModelViewer url="/models/Duck.glb" enableControls={false}>
+      <section className="fixed top-0 left-0 w-full h-screen z-10 pointer-events-auto">
+        <ModelViewer enableControls={true}>
           <StudioLighting />
           <CinematicEffects />
           <ScrollCamera />
-          <AutoPresentation>
-            <MouseParallax intensity={0.4}>
-              <VariantApplicator url="/models/Duck.glb" />
-              {hotspotsData.map((data) => (
-                <HotspotMarker key={data.id} position={data.position} data={data} />
-              ))}
-            </MouseParallax>
-          </AutoPresentation>
         </ModelViewer>
       </section>
       
@@ -45,7 +20,6 @@ export function ProductViewer() {
       <div className="fixed top-0 left-0 w-full h-screen pointer-events-none z-40">
         <div className="relative w-full h-full pointer-events-none">
           <HotspotDetails />
-          <VariantSelector />
         </div>
       </div>
     </>
