@@ -6,7 +6,6 @@ import { BRAIN_REGIONS } from './brainRegionsData';
 import { useHotspotsStore } from '../../features/hotspots/model/useHotspotsStore';
 import { NeuralParticles } from './NeuralParticles';
 
-// Collect all region center positions as a flat array for the shader
 const ALL_CENTERS = BRAIN_REGIONS.map((r) => new THREE.Vector3(...r.position));
 
 export function BrainModel() {
@@ -17,7 +16,6 @@ export function BrainModel() {
   const { nodes } = useGLTF('/models/Brain.glb');
   const geometry = nodes.brain1.geometry;
 
-  // Gentle floating
   useFrame((state) => {
     if (!groupRef.current) return;
     const t = state.clock.elapsedTime;
@@ -31,7 +29,6 @@ export function BrainModel() {
       scale={0.012}
       onPointerMissed={() => clearActiveHotspot()}
     >
-      {/* Each region is a Voronoi-partitioned slice of the brain */}
       {BRAIN_REGIONS.map((region, index) => (
         <BrainRegionMesh
           key={region.id}
@@ -43,39 +40,41 @@ export function BrainModel() {
         />
       ))}
 
-      {/* Tiny ambient particles */}
       <NeuralParticles count={60} radius={150} />
     </group>
   );
 }
 
-/**
- * One brain lobe. Uses a Voronoi shader to show ONLY the part of the brain
- * surface that is closest to this region's center. Every pixel on the brain
- * belongs to exactly one region — no gaps, no overlap, clear boundaries.
- */
 function BrainRegionMesh({ geometry, region, regionIndex, isActive, isOtherActive }) {
+  const groupRef = useRef();
   const meshRef = useRef();
+  const innerRef = useRef();
   const wireRef = useRef();
+  
   const setActiveHotspot = useHotspotsStore((s) => s.setActiveHotspot);
   const clearActiveHotspot = useHotspotsStore((s) => s.clearActiveHotspot);
 
   const restPos = useMemo(() => new THREE.Vector3(0, 0, 0), []);
   const activePos = useMemo(() => new THREE.Vector3(...region.popDirection), [region]);
 
-  // Build "other centers" array (the 4 centers that are NOT this region)
   const otherCenters = useMemo(() => {
     return ALL_CENTERS.filter((_, i) => i !== regionIndex);
   }, [regionIndex]);
 
+  // Common uniforms for Voronoi clipping
+  const commonUniforms = useMemo(() => ({
+    myCenter: { value: new THREE.Vector3(...region.position) },
+    otherCenter0: { value: otherCenters[0] },
+    otherCenter1: { value: otherCenters[1] },
+    otherCenter2: { value: otherCenters[2] },
+    otherCenter3: { value: otherCenters[3] },
+  }), [region, otherCenters]);
+
+  // Outer shell shader (FrontSide)
   const shaderMat = useMemo(() => {
     return new THREE.ShaderMaterial({
       uniforms: {
-        myCenter: { value: new THREE.Vector3(...region.position) },
-        otherCenter0: { value: otherCenters[0] },
-        otherCenter1: { value: otherCenters[1] },
-        otherCenter2: { value: otherCenters[2] },
-        otherCenter3: { value: otherCenters[3] },
+        ...commonUniforms,
         baseColor: { value: new THREE.Color(region.color) },
         uOpacity: { value: 0.35 },
         uEmissive: { value: 0.0 },
@@ -99,48 +98,83 @@ function BrainRegionMesh({ geometry, region, regionIndex, isActive, isOtherActiv
         uniform vec3 baseColor;
         uniform float uOpacity;
         uniform float uEmissive;
-        uniform float uTime;
         varying vec3 vLocalPos;
         varying vec3 vNormal;
 
         void main() {
           float myDist = distance(vLocalPos, myCenter);
-
-          // Voronoi: discard if ANY other center is closer
           if (distance(vLocalPos, otherCenter0) < myDist) discard;
           if (distance(vLocalPos, otherCenter1) < myDist) discard;
           if (distance(vLocalPos, otherCenter2) < myDist) discard;
           if (distance(vLocalPos, otherCenter3) < myDist) discard;
 
-          // Boundary darkening — darken pixels near the Voronoi edge
+          vec3 viewDir = vec3(0.0, 0.0, 1.0);
+          float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 2.5);
+          vec3 color = baseColor * (0.6 + uEmissive * 0.6) + baseColor * fresnel * 0.4;
+
           float minOtherDist = min(
             min(distance(vLocalPos, otherCenter0), distance(vLocalPos, otherCenter1)),
             min(distance(vLocalPos, otherCenter2), distance(vLocalPos, otherCenter3))
           );
           float edgeDist = abs(myDist - minOtherDist);
-          float edgeFactor = smoothstep(0.0, 8.0, edgeDist);
-
-          // Fresnel edge highlight
-          vec3 viewDir = vec3(0.0, 0.0, 1.0);
-          float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 2.5);
-
-          // Final color
-          vec3 color = baseColor * (0.6 + uEmissive * 0.6) + baseColor * fresnel * 0.4;
-
-          // Dark edge line between regions
           float edgeLine = smoothstep(0.0, 3.0, edgeDist);
 
-          float finalOpacity = uOpacity * edgeLine;
-          gl_FragColor = vec4(color, finalOpacity);
+          gl_FragColor = vec4(color, uOpacity * edgeLine);
         }
       `,
       transparent: true,
       depthWrite: false,
-      side: THREE.DoubleSide,
+      side: THREE.FrontSide, // Only render the outside surface
     });
-  }, [region, otherCenters]);
+  }, [commonUniforms, region.color]);
 
-  // Wireframe material matching region color
+  // Inner cross-section shader (BackSide)
+  // This renders the *inside* of the hollow mesh as a solid, flat color.
+  // This creates the illusion of a solid volumetric cross-section when clipped.
+  const innerMat = useMemo(() => {
+    // Make the inside color a darker, richer version of the region color
+    const innerColor = new THREE.Color(region.color).multiplyScalar(0.25);
+    
+    return new THREE.ShaderMaterial({
+      uniforms: {
+        ...commonUniforms,
+        innerColor: { value: innerColor },
+        uOpacity: { value: 0.9 }, // High opacity to look solid
+      },
+      vertexShader: `
+        varying vec3 vLocalPos;
+        void main() {
+          vLocalPos = position;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 myCenter;
+        uniform vec3 otherCenter0;
+        uniform vec3 otherCenter1;
+        uniform vec3 otherCenter2;
+        uniform vec3 otherCenter3;
+        uniform vec3 innerColor;
+        uniform float uOpacity;
+        varying vec3 vLocalPos;
+
+        void main() {
+          float myDist = distance(vLocalPos, myCenter);
+          if (distance(vLocalPos, otherCenter0) < myDist) discard;
+          if (distance(vLocalPos, otherCenter1) < myDist) discard;
+          if (distance(vLocalPos, otherCenter2) < myDist) discard;
+          if (distance(vLocalPos, otherCenter3) < myDist) discard;
+
+          // Flat shading for the cross-section core to look solid
+          gl_FragColor = vec4(innerColor, uOpacity);
+        }
+      `,
+      transparent: true,
+      depthWrite: false,
+      side: THREE.BackSide, // Only render the INSIDE back-faces
+    });
+  }, [commonUniforms, region.color]);
+
   const wireMat = useMemo(() => new THREE.MeshBasicMaterial({
     color: region.color,
     wireframe: true,
@@ -150,35 +184,34 @@ function BrainRegionMesh({ geometry, region, regionIndex, isActive, isOtherActiv
   }), [region.color]);
 
   useFrame((state, delta) => {
-    if (!meshRef.current) return;
+    if (!groupRef.current) return;
     const t = delta * 3.5;
 
     shaderMat.uniforms.uTime.value = state.clock.elapsedTime;
 
-    // Pop out position
     const targetPos = isActive ? activePos : restPos;
-    meshRef.current.position.lerp(targetPos, t);
-    if (wireRef.current) wireRef.current.position.lerp(targetPos, t);
+    groupRef.current.position.lerp(targetPos, t);
 
-    // Scale up when active
     const targetScale = isActive ? 1.12 : 1.0;
-    const s = THREE.MathUtils.lerp(meshRef.current.scale.x, targetScale, t);
-    meshRef.current.scale.setScalar(s);
-    if (wireRef.current) wireRef.current.scale.setScalar(s);
+    const s = THREE.MathUtils.lerp(groupRef.current.scale.x, targetScale, t);
+    groupRef.current.scale.setScalar(s);
 
-    // Opacity
     const targetOpacity = isActive ? 0.7 : isOtherActive ? 0.1 : 0.35;
     shaderMat.uniforms.uOpacity.value = THREE.MathUtils.lerp(
       shaderMat.uniforms.uOpacity.value, targetOpacity, t
     );
+    
+    // Fade inner cross-section slightly if another region is active
+    const innerTargetOpacity = isOtherActive ? 0.2 : 0.9;
+    innerMat.uniforms.uOpacity.value = THREE.MathUtils.lerp(
+      innerMat.uniforms.uOpacity.value, innerTargetOpacity, t
+    );
 
-    // Emissive glow when active
     const targetEmissive = isActive ? 0.8 : 0.0;
     shaderMat.uniforms.uEmissive.value = THREE.MathUtils.lerp(
       shaderMat.uniforms.uEmissive.value, targetEmissive, t
     );
 
-    // Wireframe opacity
     if (wireRef.current) {
       const targetWire = isActive ? 0.15 : isOtherActive ? 0.02 : 0.06;
       wireRef.current.material.opacity = THREE.MathUtils.lerp(
@@ -189,33 +222,39 @@ function BrainRegionMesh({ geometry, region, regionIndex, isActive, isOtherActiv
 
   const handleClick = (e) => {
     e.stopPropagation();
-    if (isActive) {
-      clearActiveHotspot();
-    } else {
-      setActiveHotspot({
-        id: region.id,
-        title: region.name,
-        biology: region.biology,
-        skillTitle: region.skillTitle,
-        description: region.skillDescription,
-      });
-    }
+    if (isActive) clearActiveHotspot();
+    else setActiveHotspot({
+      id: region.id,
+      title: region.name,
+      biology: region.biology,
+      skillTitle: region.skillTitle,
+      description: region.skillDescription,
+    });
   };
 
   return (
-    <group>
-      {/* Solid colored region */}
+    <group ref={groupRef}>
+      {/* 1. Inner Cross-Section (renders backfaces of the hollow shell as a solid color) */}
+      <mesh
+        ref={innerRef}
+        geometry={geometry}
+        material={innerMat}
+        renderOrder={1}
+      />
+      {/* 2. Outer Transparent Shell */}
       <mesh
         ref={meshRef}
         geometry={geometry}
         material={shaderMat}
         onClick={handleClick}
+        renderOrder={2}
       />
-      {/* Wireframe overlay for texture */}
+      {/* 3. Wireframe Overlay */}
       <mesh
         ref={wireRef}
         geometry={geometry}
         material={wireMat}
+        renderOrder={3}
       />
     </group>
   );
