@@ -1,13 +1,13 @@
 :root {
-  /* Colors — Studio Ethereal palette */
-  --color-void: #f7f7f8;
-  --color-surface: rgba(255, 255, 255, 0.4);
-  --color-surface-raised: rgba(255, 255, 255, 0.6);
-  --color-accent: #9b87f5;
-  --color-accent-warm: #e07a5f;
-  --color-text-primary: #2d3748;
-  --color-text-secondary: #718096;
-  --color-border: rgba(0, 0, 0, 0.08);
+  /* Colors — Dark Void palette */
+  --color-void: #0a0a12;
+  --color-surface: rgba(255, 255, 255, 0.05);
+  --color-surface-raised: rgba(255, 255, 255, 0.08);
+  --color-accent: #4fc3f7;
+  --color-accent-warm: #ff9800;
+  --color-text-primary: #e8eaf6;
+  --color-text-secondary: rgba(255, 255, 255, 0.55);
+  --color-border: rgba(255, 255, 255, 0.08);
 
   /* Spacing (8pt grid) */
   --space-1: 4px;
@@ -45,10 +45,10 @@
   --radius-xl: 24px;
   --radius-full: 9999px;
 
-  /* Shadows — softer for light theme */
+  /* Shadows — dark theme glows */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
-  --shadow-glow: 0 0 40px rgba(155, 135, 245, 0.2);
+  --shadow-glow: 0 0 40px rgba(79, 195, 247, 0.2);
 
   /* Z-index scale */
   --z-base: 0;

@@ -6,8 +6,16 @@ import { BrainModel } from '../../../entities/brainModel';
 
 export function ModelViewer({ children, enableControls = true }) {
   return (
-    <div className="w-full h-full relative bg-void overflow-hidden">
-      <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 4.5], fov: 45 }}>
+    <div className="w-full h-full relative overflow-hidden">
+      <Canvas
+        dpr={[1, 2]}
+        camera={{ position: [0, 0, 4.5], fov: 45 }}
+        gl={{ antialias: true, alpha: false }}
+      >
+        {/* Force dark scene background */}
+        <color attach="background" args={['#0a0a12']} />
+        <fog attach="fog" args={['#0a0a12', 8, 18]} />
+
         <Suspense fallback={<Loader />}>
           <BrainModel />
           {enableControls && (

@@ -3,24 +3,27 @@ import { BlendFunction } from 'postprocessing';
 
 export function CinematicEffects() {
   return (
-    <EffectComposer disableNormalPass>
+    <EffectComposer disableNormalPass multisampling={0}>
       {/* 
-        Bloom — subtle for light theme, just catches shiny material highlights 
+        Bloom — very subtle, just a soft glow on bright edges.
+        Low mipmapBlur resolution to prevent blocky artifacts.
       */}
       <Bloom 
-        intensity={0.3} 
-        luminanceThreshold={0.9} 
-        luminanceSmoothing={0.05} 
-        blendFunction={BlendFunction.SCREEN} 
+        intensity={0.4} 
+        luminanceThreshold={0.6} 
+        luminanceSmoothing={0.9} 
+        mipmapBlur
+        radius={0.8}
+        blendFunction={BlendFunction.ADD} 
       />
       
       {/* 
-        Vignette — very subtle on light backgrounds to softly frame the scene 
+        Vignette — subtle darkening around edges to frame the brain 
       */}
       <Vignette 
         eskil={false} 
-        offset={0.15} 
-        darkness={0.3} 
+        offset={0.2} 
+        darkness={0.5} 
         blendFunction={BlendFunction.NORMAL} 
       />
     </EffectComposer>

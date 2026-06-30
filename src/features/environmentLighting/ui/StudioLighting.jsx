@@ -1,35 +1,22 @@
-import { Environment, ContactShadows } from '@react-three/drei';
-
 export function StudioLighting() {
   return (
     <>
-      {/* 
-        Studio HDRI for clean, soft reflections suited to a light background.
-        The 'studio' preset gives a controlled, product-photography look.
-      */}
-      <Environment preset="studio" environmentIntensity={0.8} />
+      {/* No Environment preset — we want pure dark with controlled lights */}
       
-      {/* Key light — soft and directional from upper-right */}
-      <directionalLight position={[5, 8, 5]} intensity={1.5} color="#ffffff" />
+      {/* Key light — cool cyan from upper-right */}
+      <directionalLight position={[5, 8, 5]} intensity={1.2} color="#4fc3f7" />
       
-      {/* Fill light — subtle from the left to soften shadows */}
-      <directionalLight position={[-3, 4, 2]} intensity={0.4} color="#e8e4f0" />
+      {/* Fill light — warm orange from the left */}
+      <directionalLight position={[-4, 3, 2]} intensity={0.5} color="#ff9800" />
       
-      {/* Rim light — from behind to create a glowing edge effect */}
-      <directionalLight position={[0, 3, -5]} intensity={0.8} color="#d4c5f9" />
+      {/* Rim light — strong cyan from behind for edge glow */}
+      <directionalLight position={[0, 2, -6]} intensity={0.8} color="#4fc3f7" />
       
-      {/* Ambient fill */}
-      <ambientLight intensity={0.5} />
+      {/* Bottom fill — subtle purple uplighting */}
+      <directionalLight position={[0, -4, 0]} intensity={0.2} color="#7c4dff" />
       
-      {/* Contact shadow to ground the model */}
-      <ContactShadows 
-        position={[0, -1.5, 0]} 
-        opacity={0.25} 
-        scale={8} 
-        blur={2.5} 
-        far={4} 
-        color="#2d3748"
-      />
+      {/* Very dim ambient to prevent total blackness */}
+      <ambientLight intensity={0.08} color="#1a237e" />
     </>
   );
 }
