@@ -1,7 +1,7 @@
 /**
- * Brain region configuration.
- * The Voronoi shader automatically assigns every point on the brain
- * to the nearest region center — no gaps, no overlap.
+ * Brain region configuration — ultra-realistic anatomical palette.
+ * Real brain tissue is pinkish-grey with visible blood vessels.
+ * The differences between lobes are VERY subtle in reality.
  */
 export const BRAIN_REGIONS = [
   {
@@ -13,7 +13,9 @@ export const BRAIN_REGIONS = [
       'Designing scalable systems, planning codebases, making critical technical decisions, and breaking down complex problems into elegant solutions.',
     position: [0, 65, 55],
     popDirection: [0, 15, 45],
-    color: '#00e5ff',
+    color: '#c8a098',       // warm pinkish cortex
+    innerColor: '#8a4842',  // deep red-brown interior
+    attenuationColor: '#d04040', // blood-red subsurface
   },
   {
     id: 'parietal',
@@ -24,7 +26,9 @@ export const BRAIN_REGIONS = [
       'React, Three.js, WebGL, GSAP, Node.js — deep fluency across the modern web stack. Algorithms, data structures, and state management.',
     position: [0, 90, -15],
     popDirection: [0, 45, 0],
-    color: '#448aff',
+    color: '#c09898',       // slightly cooler pink-grey
+    innerColor: '#7a3e40',  // deep red-brown interior
+    attenuationColor: '#c83838',
   },
   {
     id: 'occipital',
@@ -35,7 +39,9 @@ export const BRAIN_REGIONS = [
       'UI/UX design, CSS architecture, micro-animations, color theory, and layout composition. Pixel-perfect, emotionally resonant interfaces.',
     position: [0, 55, -70],
     popDirection: [0, 10, -45],
-    color: '#ff4081',
+    color: '#b89490',       // deeper pink-grey
+    innerColor: '#6e3835',  // deep red-brown interior
+    attenuationColor: '#b83030',
   },
   {
     id: 'temporal',
@@ -46,7 +52,9 @@ export const BRAIN_REGIONS = [
       'Technical writing, cross-team collaboration, mentoring, and rapidly absorbing new technologies. Translating complex ideas into clear language.',
     position: [65, 25, 10],
     popDirection: [45, 0, 8],
-    color: '#00e676',
+    color: '#c4a090',       // warm beige-pink
+    innerColor: '#7e4238',  // deep red-brown interior
+    attenuationColor: '#c04038',
   },
   {
     id: 'cerebellum',
@@ -57,6 +65,8 @@ export const BRAIN_REGIONS = [
       'Code quality, systematic debugging, performance optimization, and pixel-perfect implementation. The last 5% that separates good from great.',
     position: [0, -5, -55],
     popDirection: [0, -30, -30],
-    color: '#ffab00',
+    color: '#b09088',       // slightly darker warm grey-pink
+    innerColor: '#6a3830',  // deep red-brown interior
+    attenuationColor: '#a83028',
   },
 ];

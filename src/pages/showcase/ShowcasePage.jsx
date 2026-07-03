@@ -6,7 +6,7 @@ export default function ShowcasePage() {
       {/* Header */}
       <header className="fixed top-0 left-0 w-full px-sp-4 md:px-sp-6 py-sp-3 md:py-sp-4 z-50 flex justify-between items-center pointer-events-none">
         <h1 className="font-oswald font-black text-2xl md:text-3xl uppercase italic tracking-tighter pointer-events-auto text-text-primary">
-          MKL
+          MS
         </h1>
         <span className="subheading-editorial pointer-events-auto text-text-secondary text-xs md:text-sm">
           Portfolio '25

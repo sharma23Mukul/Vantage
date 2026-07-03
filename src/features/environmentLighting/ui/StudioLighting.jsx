@@ -1,22 +1,63 @@
+import { Environment } from '@react-three/drei';
+
+/**
+ * Medical-grade lighting setup for ultra-realistic brain rendering.
+ * Designed to create strong specular catches on the wet clearcoat surface
+ * and dramatic shadows in the sulci (brain folds).
+ */
 export function StudioLighting() {
   return (
     <>
-      {/* No Environment preset — we want pure dark with controlled lights */}
-      
-      {/* Key light — cool cyan from upper-right */}
-      <directionalLight position={[5, 8, 5]} intensity={1.2} color="#4fc3f7" />
-      
-      {/* Fill light — warm orange from the left */}
-      <directionalLight position={[-4, 3, 2]} intensity={0.5} color="#ff9800" />
-      
-      {/* Rim light — strong cyan from behind for edge glow */}
-      <directionalLight position={[0, 2, -6]} intensity={0.8} color="#4fc3f7" />
-      
-      {/* Bottom fill — subtle purple uplighting */}
-      <directionalLight position={[0, -4, 0]} intensity={0.2} color="#7c4dff" />
-      
-      {/* Very dim ambient to prevent total blackness */}
-      <ambientLight intensity={0.08} color="#1a237e" />
+      {/* HDRI for clearcoat reflections — essential for wet look */}
+      <Environment preset="studio" environmentIntensity={0.6} />
+
+      {/* Key light — strong warm white, creates the main specular highlights */}
+      <directionalLight
+        position={[3, 7, 4]}
+        intensity={2.2}
+        color="#fff4e8"
+        castShadow
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
+      />
+
+      {/* Secondary key — slightly cool, from opposite side for dimension */}
+      <directionalLight
+        position={[-4, 5, 3]}
+        intensity={0.8}
+        color="#e0e8f0"
+      />
+
+      {/* Back rim — warm, separates brain from the void */}
+      <directionalLight
+        position={[0, 4, -6]}
+        intensity={1.0}
+        color="#ffe0c8"
+      />
+
+      {/* Top-down — catches the top surfaces of the gyri */}
+      <directionalLight
+        position={[0, 10, 0]}
+        intensity={0.5}
+        color="#f8e8d8"
+      />
+
+      {/* Low angle warm fill — prevents pitch black undersides */}
+      <directionalLight
+        position={[2, -4, 3]}
+        intensity={0.25}
+        color="#e8c8b0"
+      />
+
+      {/* Front-bottom fill for the cerebellum */}
+      <directionalLight
+        position={[-1, -2, 5]}
+        intensity={0.15}
+        color="#d8c0b0"
+      />
+
+      {/* Very dim warm ambient — just enough to prevent pure black */}
+      <ambientLight intensity={0.08} color="#c8a898" />
     </>
   );
 }

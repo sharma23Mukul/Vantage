@@ -1,30 +1,34 @@
-import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing';
+import { EffectComposer, Bloom, Vignette, ChromaticAberration } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
 
+/**
+ * Cinematic post-processing for medical visualization feel.
+ */
 export function CinematicEffects() {
   return (
     <EffectComposer disableNormalPass multisampling={0}>
-      {/* 
-        Bloom — very subtle, just a soft glow on bright edges.
-        Low mipmapBlur resolution to prevent blocky artifacts.
-      */}
-      <Bloom 
-        intensity={0.4} 
-        luminanceThreshold={0.6} 
-        luminanceSmoothing={0.9} 
+      {/* Soft bloom catches the specular highlights on the wet surface */}
+      <Bloom
+        intensity={0.15}
+        luminanceThreshold={0.85}
+        luminanceSmoothing={0.9}
         mipmapBlur
-        radius={0.8}
-        blendFunction={BlendFunction.ADD} 
+        radius={0.7}
+        blendFunction={BlendFunction.ADD}
       />
-      
-      {/* 
-        Vignette — subtle darkening around edges to frame the brain 
-      */}
-      <Vignette 
-        eskil={false} 
-        offset={0.2} 
-        darkness={0.5} 
-        blendFunction={BlendFunction.NORMAL} 
+
+      {/* Subtle chromatic aberration for a microscope/camera lens feel */}
+      <ChromaticAberration
+        offset={[0.0004, 0.0004]}
+        blendFunction={BlendFunction.NORMAL}
+      />
+
+      {/* Deep vignette for dramatic framing */}
+      <Vignette
+        eskil={false}
+        offset={0.3}
+        darkness={0.65}
+        blendFunction={BlendFunction.NORMAL}
       />
     </EffectComposer>
   );
