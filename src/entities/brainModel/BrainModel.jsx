@@ -36,6 +36,7 @@ export function BrainModel() {
   const groupRef = useRef();
   const activeHotspot = useHotspotsStore((s) => s.activeHotspot);
   const clearActiveHotspot = useHotspotsStore((s) => s.clearActiveHotspot);
+  const setActiveHotspot = useHotspotsStore((s) => s.setActiveHotspot);
 
   const { nodes, materials } = useGLTF('/models/stylizedbrain/scene.gltf');
 
@@ -72,6 +73,42 @@ export function BrainModel() {
     groupRef.current.rotation.y += 0.0008;
   });
 
+  const handleBrainClick = useCallback((e) => {
+    e.stopPropagation();
+    
+    // The raycaster hits the full overlapping geometry.
+    // We convert the world hit point into the unscaled, unrotated local space of the raw geometry.
+    const point = e.point.clone();
+    e.object.worldToLocal(point);
+    
+    // Find which Voronoi region center is closest to this raw local coordinate
+    let closestRegion = null;
+    let minDist = Infinity;
+    
+    BRAIN_REGIONS.forEach((region) => {
+      const center = new THREE.Vector3(...region.position);
+      const dist = point.distanceTo(center);
+      if (dist < minDist) {
+        minDist = dist;
+        closestRegion = region;
+      }
+    });
+
+    if (closestRegion) {
+      if (activeHotspot?.id === closestRegion.id) {
+        clearActiveHotspot();
+      } else {
+        setActiveHotspot({
+          id: closestRegion.id,
+          title: closestRegion.name,
+          biology: closestRegion.biology,
+          skillTitle: closestRegion.skillTitle,
+          description: closestRegion.skillDescription,
+        });
+      }
+    }
+  }, [activeHotspot, clearActiveHotspot, setActiveHotspot]);
+
   if (!geometry) return null;
 
   return (
@@ -80,7 +117,7 @@ export function BrainModel() {
       position={[0, 0, 0]}
       onPointerMissed={() => clearActiveHotspot()}
     >
-      <group scale={28} rotation={[-Math.PI / 2, 0, 0]}>
+      <group scale={28} rotation={[-Math.PI / 2, 0, 0]} onClick={handleBrainClick} onPointerOver={(e) => { document.body.style.cursor = 'pointer'; }} onPointerOut={(e) => { document.body.style.cursor = 'auto'; }}>
         <Center>
           {BRAIN_REGIONS.map((region, index) => (
             <BrainRegionMesh
@@ -332,23 +369,11 @@ function BrainRegionMesh({
     }
   });
 
-  const handleClick = useCallback((e) => {
-    e.stopPropagation();
-    if (isActive) clearActiveHotspot();
-    else setActiveHotspot({
-      id: region.id,
-      title: region.name,
-      biology: region.biology,
-      skillTitle: region.skillTitle,
-      description: region.skillDescription,
-    });
-  }, [isActive, region, setActiveHotspot, clearActiveHotspot]);
-
   return (
     <group ref={groupRef}>
       <mesh geometry={geometry} material={coreMat} scale={0.92} renderOrder={0} />
       <mesh geometry={geometry} material={innerMat} renderOrder={1} />
-      <mesh geometry={geometry} material={outerMat} onClick={handleClick} renderOrder={2} />
+      <mesh geometry={geometry} material={outerMat} renderOrder={2} />
     </group>
   );
 }
