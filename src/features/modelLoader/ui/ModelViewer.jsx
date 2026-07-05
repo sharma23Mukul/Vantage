@@ -10,11 +10,8 @@ export function ModelViewer({ children, enableControls = true }) {
       <Canvas
         dpr={[1, 2]}
         camera={{ position: [0, 0, 4.5], fov: 45 }}
-        gl={{ antialias: true, alpha: false }}
+        gl={{ antialias: true, alpha: true }}
       >
-        {/* Force dark scene background */}
-        <color attach="background" args={['#0a0a12']} />
-        <fog attach="fog" args={['#0a0a12', 8, 18]} />
 
         <Suspense fallback={<Loader />}>
           <BrainModel />
