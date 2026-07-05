@@ -2,13 +2,17 @@ import { ProductViewer } from '../../widgets/productViewer';
 
 export default function ShowcasePage() {
   return (
-    <div className="page-showcase text-text-primary overflow-x-hidden">
+    <div className="page-showcase text-text-primary overflow-x-hidden relative bg-void">
+      {/* Ambient Neural Background Layer */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-20" style={{ background: 'radial-gradient(circle at 10% 20%, var(--color-accent) 0%, transparent 40%), radial-gradient(circle at 90% 80%, var(--color-accent-secondary) 0%, transparent 40%)' }}></div>
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")', mixBlendMode: 'overlay' }}></div>
+
       {/* Header */}
       <header className="fixed top-0 left-0 w-full px-sp-4 md:px-sp-6 py-sp-3 md:py-sp-4 z-50 flex justify-between items-center pointer-events-none">
-        <h1 className="font-oswald font-black text-2xl md:text-3xl uppercase italic tracking-tighter pointer-events-auto text-text-primary">
+        <h1 className="font-oswald font-bold text-2xl md:text-3xl uppercase tracking-wider pointer-events-auto text-text-primary">
           MS
         </h1>
-        <span className="subheading-editorial pointer-events-auto text-text-secondary text-xs md:text-sm">
+        <span className="font-oswald font-medium uppercase tracking-[0.05em] pointer-events-auto text-text-secondary text-sm md:text-base">
           Portfolio '25
         </span>
       </header>
@@ -27,7 +31,7 @@ export default function ShowcasePage() {
             <h2 className="heading-brutal text-6xl md:text-8xl text-text-primary mb-sp-3 md:mb-sp-4 -skew-y-2">
               Mukul<br />Sharma
             </h2>
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-sp-4 md:p-sp-5 max-w-[300px] md:max-w-sm shadow-md">
+            <div className="bg-void/70 backdrop-blur-md border border-accent/20 rounded-2xl p-sp-4 md:p-sp-5 max-w-[300px] md:max-w-sm shadow-md">
               <p className="text-sm md:text-base text-text-secondary leading-relaxed">
                 Creative developer. Scroll to explore the regions of my brain —
                 each one maps to a real skill.
@@ -48,7 +52,7 @@ export default function ShowcasePage() {
             <h2 className="heading-brutal text-5xl md:text-7xl text-text-primary mb-sp-3 md:mb-sp-4 skew-y-1">
               System<br />Architect
             </h2>
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm ml-auto shadow-md">
+            <div className="bg-void/70 backdrop-blur-md border border-accent/20 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm ml-auto shadow-md">
               <p className="text-sm md:text-base text-text-secondary leading-relaxed">
                 The part of the brain responsible for planning and complex
                 reasoning. I use it to design scalable systems and make
@@ -67,7 +71,7 @@ export default function ShowcasePage() {
             <h2 className="heading-brutal text-5xl md:text-7xl text-text-primary mb-sp-3 md:mb-sp-4 -skew-y-1">
               Technical<br />Engineer
             </h2>
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm shadow-md">
+            <div className="bg-void/70 backdrop-blur-md border border-accent/20 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm shadow-md">
               <p className="text-sm md:text-base text-text-secondary leading-relaxed">
                 Spatial reasoning and mathematical logic live here.
                 React, Three.js, WebGL, GSAP — deep fluency across the
@@ -86,7 +90,7 @@ export default function ShowcasePage() {
             <h2 className="heading-brutal text-5xl md:text-7xl text-text-primary mb-sp-3 md:mb-sp-4 skew-y-1">
               Design<br />&amp; Craft
             </h2>
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm ml-auto shadow-md">
+            <div className="bg-void/70 backdrop-blur-md border border-accent/20 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm ml-auto shadow-md">
               <p className="text-sm md:text-base text-text-secondary leading-relaxed">
                 Where visual processing and pattern recognition happen.
                 I channel it into UI/UX, micro-animations, and
@@ -105,7 +109,7 @@ export default function ShowcasePage() {
             <h2 className="heading-brutal text-5xl md:text-7xl text-text-primary mb-sp-3 md:mb-sp-4 -skew-y-2">
               Comm<br />&amp; Learn
             </h2>
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm shadow-md">
+            <div className="bg-void/70 backdrop-blur-md border border-accent/20 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm shadow-md">
               <p className="text-sm md:text-base text-text-secondary leading-relaxed">
                 Memory and language processing. I leverage it for
                 technical writing, cross-team collaboration, and
@@ -124,7 +128,7 @@ export default function ShowcasePage() {
             <h2 className="heading-brutal text-5xl md:text-7xl text-text-primary mb-sp-3 md:mb-sp-4 skew-y-1">
               Precision<br />&amp; Detail
             </h2>
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm ml-auto shadow-md">
+            <div className="bg-void/70 backdrop-blur-md border border-accent/20 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm ml-auto shadow-md">
               <p className="text-sm md:text-base text-text-secondary leading-relaxed">
                 Fine motor control and precision. The part that drives
                 code quality, systematic debugging, and performance
@@ -143,7 +147,7 @@ export default function ShowcasePage() {
             <h2 className="heading-brutal text-5xl md:text-7xl text-text-primary mb-sp-3 md:mb-sp-4 -skew-y-1">
               Let's<br />Create
             </h2>
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm shadow-md">
+            <div className="bg-void/70 backdrop-blur-md border border-accent/20 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm shadow-md">
               <p className="text-sm md:text-base text-text-secondary leading-relaxed mb-sp-3">
                 Always open to exciting projects and collaborations.
               </p>
@@ -151,7 +155,7 @@ export default function ShowcasePage() {
                 href="https://github.com/sharma23Mukul"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-[#4fc3f7] text-[#0a0a12] px-5 py-2.5 rounded-full font-semibold text-sm hover:bg-accent/90 transition-colors shadow-sm"
+                className="inline-flex items-center gap-2 bg-accent text-void px-5 py-2.5 rounded-full font-semibold uppercase tracking-wider text-xs hover:bg-accent/90 hover:shadow-glow transition-all duration-300"
               >
                 View GitHub →
               </a>

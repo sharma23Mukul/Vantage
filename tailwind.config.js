@@ -8,7 +8,7 @@ export default {
         surface: 'var(--color-surface)',
         'surface-raised': 'var(--color-surface-raised)',
         accent: 'var(--color-accent)',
-        'accent-warm': 'var(--color-accent-warm)',
+        'accent-secondary': 'var(--color-accent-secondary)',
         'text-primary': 'var(--color-text-primary)',
         'text-secondary': 'var(--color-text-secondary)',
         border: 'var(--color-border)',
