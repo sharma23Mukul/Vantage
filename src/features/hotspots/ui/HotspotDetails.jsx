@@ -8,7 +8,7 @@ export function HotspotDetails() {
   if (!activeHotspot) return null;
 
   return (
-    <div className="absolute bottom-sp-4 md:bottom-sp-8 right-sp-4 md:right-sp-8 z-50 w-[90vw] md:w-[340px] bg-white/5 backdrop-blur-xl border border-white/10 p-sp-5 md:p-sp-6 rounded-2xl shadow-lg pointer-events-auto transition-all duration-500">
+    <div className="absolute bottom-sp-4 md:bottom-sp-8 right-sp-4 md:right-sp-8 z-50 w-[90vw] md:w-[340px] bg-white/5 backdrop-blur-xl border border-white/10 p-sp-5 md:p-sp-6 rounded-2xl shadow-2xl pointer-events-auto transition-all duration-500">
       {/* Region name */}
       <div className="flex justify-between items-start mb-sp-3">
         <h3 className="font-oswald font-bold text-xl md:text-2xl uppercase text-text-primary leading-tight">
@@ -24,7 +24,7 @@ export function HotspotDetails() {
       </div>
 
       {/* Biology tagline */}
-      <p className="text-xs text-accent font-medium uppercase tracking-wider mb-sp-3">
+      <p className="text-xs text-accent [text-shadow:_0_0_15px_currentColor] font-medium uppercase tracking-wider mb-sp-3">
         {activeHotspot.biology}
       </p>
 
@@ -32,10 +32,10 @@ export function HotspotDetails() {
       <div className="w-full h-px bg-border/50 mb-sp-3" />
 
       {/* Skill mapping */}
-      <p className="font-oswald font-bold text-base uppercase text-accent-warm mb-sp-2">
+      <p className="font-oswald font-bold text-base uppercase text-accent-warm [text-shadow:_0_0_15px_currentColor] mb-sp-2">
         {activeHotspot.skillTitle}
       </p>
-      <p className="text-sm text-text-secondary leading-relaxed">
+      <p className="text-sm text-slate-300 leading-relaxed">
         {activeHotspot.description}
       </p>
     </div>

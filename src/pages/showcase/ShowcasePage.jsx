@@ -8,7 +8,7 @@ export default function ShowcasePage() {
         <h1 className="font-oswald font-black text-2xl md:text-3xl uppercase italic tracking-tighter pointer-events-auto text-text-primary">
           MS
         </h1>
-        <span className="subheading-editorial pointer-events-auto text-text-secondary text-xs md:text-sm">
+        <span className="subheading-editorial pointer-events-auto text-slate-300 text-xs md:text-sm">
           Portfolio '25
         </span>
       </header>
@@ -21,18 +21,18 @@ export default function ShowcasePage() {
         {/* 1. Hero Section */}
         <section id="section-hero" className="h-screen flex items-end p-sp-4 md:p-sp-8 pb-24 md:pb-32">
           <div className="pointer-events-auto">
-            <p className="subheading-editorial text-accent mb-sp-2 md:mb-sp-3">
+            <p className="subheading-editorial text-accent [text-shadow:_0_0_15px_currentColor] mb-sp-2 md:mb-sp-3">
               Hello, I'm
             </p>
             <h2 className="heading-brutal text-6xl md:text-8xl text-text-primary mb-sp-3 md:mb-sp-4 -skew-y-2">
               Mukul<br />Sharma
             </h2>
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-sp-4 md:p-sp-5 max-w-[300px] md:max-w-sm shadow-md">
-              <p className="text-sm md:text-base text-text-secondary leading-relaxed">
+            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-sp-4 md:p-sp-5 max-w-[300px] md:max-w-sm shadow-2xl">
+              <p className="text-sm md:text-base text-slate-300 leading-relaxed">
                 Creative developer. Scroll to explore the regions of my brain —
                 each one maps to a real skill.
               </p>
-              <p className="text-xs text-accent mt-sp-2 font-medium">
+              <p className="text-xs text-accent [text-shadow:_0_0_15px_currentColor] mt-sp-2 font-medium">
                 Click any brain region to learn more ↗
               </p>
             </div>
@@ -42,14 +42,14 @@ export default function ShowcasePage() {
         {/* 2. Prefrontal Cortex — Planning & Logic */}
         <section id="section-prefrontal" className="h-screen flex items-center justify-end p-sp-4 md:p-sp-8">
           <div className="pointer-events-auto text-right">
-            <p className="subheading-editorial text-accent mb-sp-2 md:mb-sp-3">
+            <p className="subheading-editorial text-accent [text-shadow:_0_0_15px_currentColor] mb-sp-2 md:mb-sp-3">
               Prefrontal Cortex
             </p>
             <h2 className="heading-brutal text-5xl md:text-7xl text-text-primary mb-sp-3 md:mb-sp-4 skew-y-1">
               System<br />Architect
             </h2>
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm ml-auto shadow-md">
-              <p className="text-sm md:text-base text-text-secondary leading-relaxed">
+            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm ml-auto shadow-2xl">
+              <p className="text-sm md:text-base text-slate-300 leading-relaxed">
                 The part of the brain responsible for planning and complex
                 reasoning. I use it to design scalable systems and make
                 critical technical decisions.
@@ -61,14 +61,14 @@ export default function ShowcasePage() {
         {/* 3. Parietal Lobe — Technical Engineering */}
         <section id="section-parietal" className="h-screen flex items-center p-sp-4 md:p-sp-8">
           <div className="pointer-events-auto">
-            <p className="subheading-editorial text-accent-warm mb-sp-2 md:mb-sp-3">
+            <p className="subheading-editorial text-accent-warm [text-shadow:_0_0_15px_currentColor] mb-sp-2 md:mb-sp-3">
               Parietal Lobe
             </p>
             <h2 className="heading-brutal text-5xl md:text-7xl text-text-primary mb-sp-3 md:mb-sp-4 -skew-y-1">
               Technical<br />Engineer
             </h2>
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm shadow-md">
-              <p className="text-sm md:text-base text-text-secondary leading-relaxed">
+            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm shadow-2xl">
+              <p className="text-sm md:text-base text-slate-300 leading-relaxed">
                 Spatial reasoning and mathematical logic live here.
                 React, Three.js, WebGL, GSAP — deep fluency across the
                 entire modern web stack.
@@ -80,14 +80,14 @@ export default function ShowcasePage() {
         {/* 4. Occipital Lobe — Design & Visual Craft */}
         <section id="section-occipital" className="h-screen flex items-center justify-end p-sp-4 md:p-sp-8">
           <div className="pointer-events-auto text-right">
-            <p className="subheading-editorial text-accent mb-sp-2 md:mb-sp-3">
+            <p className="subheading-editorial text-accent [text-shadow:_0_0_15px_currentColor] mb-sp-2 md:mb-sp-3">
               Occipital Lobe
             </p>
             <h2 className="heading-brutal text-5xl md:text-7xl text-text-primary mb-sp-3 md:mb-sp-4 skew-y-1">
               Design<br />&amp; Craft
             </h2>
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm ml-auto shadow-md">
-              <p className="text-sm md:text-base text-text-secondary leading-relaxed">
+            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm ml-auto shadow-2xl">
+              <p className="text-sm md:text-base text-slate-300 leading-relaxed">
                 Where visual processing and pattern recognition happen.
                 I channel it into UI/UX, micro-animations, and
                 pixel-perfect interfaces.
@@ -99,14 +99,14 @@ export default function ShowcasePage() {
         {/* 5. Temporal Lobe — Communication & Learning */}
         <section id="section-temporal" className="h-screen flex items-center p-sp-4 md:p-sp-8">
           <div className="pointer-events-auto">
-            <p className="subheading-editorial text-accent-warm mb-sp-2 md:mb-sp-3">
+            <p className="subheading-editorial text-accent-warm [text-shadow:_0_0_15px_currentColor] mb-sp-2 md:mb-sp-3">
               Temporal Lobe
             </p>
             <h2 className="heading-brutal text-5xl md:text-7xl text-text-primary mb-sp-3 md:mb-sp-4 -skew-y-2">
               Comm<br />&amp; Learn
             </h2>
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm shadow-md">
-              <p className="text-sm md:text-base text-text-secondary leading-relaxed">
+            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm shadow-2xl">
+              <p className="text-sm md:text-base text-slate-300 leading-relaxed">
                 Memory and language processing. I leverage it for
                 technical writing, cross-team collaboration, and
                 rapidly absorbing new technologies.
@@ -118,14 +118,14 @@ export default function ShowcasePage() {
         {/* 6. Cerebellum — Attention to Detail */}
         <section id="section-cerebellum" className="h-screen flex items-center justify-end p-sp-4 md:p-sp-8">
           <div className="pointer-events-auto text-right">
-            <p className="subheading-editorial text-accent mb-sp-2 md:mb-sp-3">
+            <p className="subheading-editorial text-accent [text-shadow:_0_0_15px_currentColor] mb-sp-2 md:mb-sp-3">
               Cerebellum
             </p>
             <h2 className="heading-brutal text-5xl md:text-7xl text-text-primary mb-sp-3 md:mb-sp-4 skew-y-1">
               Precision<br />&amp; Detail
             </h2>
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm ml-auto shadow-md">
-              <p className="text-sm md:text-base text-text-secondary leading-relaxed">
+            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm ml-auto shadow-2xl">
+              <p className="text-sm md:text-base text-slate-300 leading-relaxed">
                 Fine motor control and precision. The part that drives
                 code quality, systematic debugging, and performance
                 optimization — the last 5% that matters.
@@ -137,14 +137,14 @@ export default function ShowcasePage() {
         {/* 7. Contact CTA */}
         <section id="section-contact" className="h-screen flex items-end p-sp-4 md:p-sp-8 pb-24 md:pb-32">
           <div className="pointer-events-auto">
-            <p className="subheading-editorial text-accent mb-sp-2 md:mb-sp-3">
+            <p className="subheading-editorial text-accent [text-shadow:_0_0_15px_currentColor] mb-sp-2 md:mb-sp-3">
               Interested?
             </p>
             <h2 className="heading-brutal text-5xl md:text-7xl text-text-primary mb-sp-3 md:mb-sp-4 -skew-y-1">
               Let's<br />Create
             </h2>
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm shadow-md">
-              <p className="text-sm md:text-base text-text-secondary leading-relaxed mb-sp-3">
+            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-sp-4 md:p-sp-5 max-w-[280px] md:max-w-sm shadow-2xl">
+              <p className="text-sm md:text-base text-slate-300 leading-relaxed mb-sp-3">
                 Always open to exciting projects and collaborations.
               </p>
               <a
