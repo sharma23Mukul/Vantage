@@ -1,63 +1,45 @@
 import { Environment } from '@react-three/drei';
 
 /**
- * Medical-grade lighting setup for ultra-realistic brain rendering.
- * Designed to create strong specular catches on the wet clearcoat surface
- * and dramatic shadows in the sulci (brain folds).
+ * Soft, diffuse lighting for realistic brain tissue.
+ * Designed to NOT create harsh specular highlights on organic material.
  */
 export function StudioLighting() {
   return (
     <>
-      {/* HDRI for clearcoat reflections — essential for wet look */}
-      <Environment preset="studio" environmentIntensity={0.6} />
+      {/* Very subtle environment — just enough for ambient color */}
+      <Environment preset="studio" environmentIntensity={0.15} />
 
-      {/* Key light — strong warm white, creates the main specular highlights */}
+      {/* Key light — warm, soft, from upper-right */}
       <directionalLight
-        position={[3, 7, 4]}
-        intensity={2.2}
-        color="#fff4e8"
-        castShadow
-        shadow-mapSize-width={1024}
-        shadow-mapSize-height={1024}
+        position={[3, 5, 4]}
+        intensity={1.8}
+        color="#ffe8d8"
       />
 
-      {/* Secondary key — slightly cool, from opposite side for dimension */}
+      {/* Fill — slightly cooler, from left */}
       <directionalLight
-        position={[-4, 5, 3]}
+        position={[-4, 3, 2]}
         intensity={0.8}
-        color="#e0e8f0"
+        color="#f0e0d8"
       />
 
-      {/* Back rim — warm, separates brain from the void */}
+      {/* Rim — warm, from behind for edge definition */}
       <directionalLight
-        position={[0, 4, -6]}
-        intensity={1.0}
-        color="#ffe0c8"
-      />
-
-      {/* Top-down — catches the top surfaces of the gyri */}
-      <directionalLight
-        position={[0, 10, 0]}
+        position={[0, 2, -4]}
         intensity={0.5}
-        color="#f8e8d8"
+        color="#ffd8c0"
       />
 
-      {/* Low angle warm fill — prevents pitch black undersides */}
+      {/* Top-down for gyri shadow definition */}
       <directionalLight
-        position={[2, -4, 3]}
-        intensity={0.25}
-        color="#e8c8b0"
+        position={[0, 8, 0]}
+        intensity={0.4}
+        color="#f8e8e0"
       />
 
-      {/* Front-bottom fill for the cerebellum */}
-      <directionalLight
-        position={[-1, -2, 5]}
-        intensity={0.15}
-        color="#d8c0b0"
-      />
-
-      {/* Very dim warm ambient — just enough to prevent pure black */}
-      <ambientLight intensity={0.08} color="#c8a898" />
+      {/* Soft ambient fill */}
+      <ambientLight intensity={0.25} color="#e8d0c0" />
     </>
   );
 }

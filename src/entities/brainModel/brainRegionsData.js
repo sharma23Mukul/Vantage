@@ -1,7 +1,12 @@
 /**
- * Brain region configuration — ultra-realistic anatomical palette.
- * Real brain tissue is pinkish-grey with visible blood vessels.
- * The differences between lobes are VERY subtle in reality.
+ * Brain region configuration for the new stylized brain model.
+ * All colors are REALISTIC FLESH — same pinkish-grey for every lobe.
+ * Lobe distinction comes from the Voronoi fissure gaps, not color.
+ *
+ * Geometry coordinate space (from GLTF):
+ *   X: -0.034 to 0.034
+ *   Y: -0.049 to 0.049
+ *   Z:  0.000 to 0.088
  */
 export const BRAIN_REGIONS = [
   {
@@ -11,11 +16,10 @@ export const BRAIN_REGIONS = [
     skillTitle: 'System Architecture',
     skillDescription:
       'Designing scalable systems, planning codebases, making critical technical decisions, and breaking down complex problems into elegant solutions.',
-    position: [0, 65, 55],
-    popDirection: [0, 15, 45],
-    color: '#c8a098',       // warm pinkish cortex
-    innerColor: '#8a4842',  // deep red-brown interior
-    attenuationColor: '#d04040', // blood-red subsurface
+    position: [0.0, 0.015, 0.072],
+    popDirection: [0.0, 0.004, 0.015],
+    color: '#c8a098',
+    innerColor: '#6b3835',
   },
   {
     id: 'parietal',
@@ -24,11 +28,10 @@ export const BRAIN_REGIONS = [
     skillTitle: 'Technical Engineering',
     skillDescription:
       'React, Three.js, WebGL, GSAP, Node.js — deep fluency across the modern web stack. Algorithms, data structures, and state management.',
-    position: [0, 90, -15],
-    popDirection: [0, 45, 0],
-    color: '#c09898',       // slightly cooler pink-grey
-    innerColor: '#7a3e40',  // deep red-brown interior
-    attenuationColor: '#c83838',
+    position: [0.0, 0.038, 0.045],
+    popDirection: [0.0, 0.015, 0.0],
+    color: '#c8a098',
+    innerColor: '#6b3835',
   },
   {
     id: 'occipital',
@@ -37,11 +40,10 @@ export const BRAIN_REGIONS = [
     skillTitle: 'Design & Visual Craft',
     skillDescription:
       'UI/UX design, CSS architecture, micro-animations, color theory, and layout composition. Pixel-perfect, emotionally resonant interfaces.',
-    position: [0, 55, -70],
-    popDirection: [0, 10, -45],
-    color: '#b89490',       // deeper pink-grey
-    innerColor: '#6e3835',  // deep red-brown interior
-    attenuationColor: '#b83030',
+    position: [0.0, 0.015, 0.008],
+    popDirection: [0.0, 0.003, -0.015],
+    color: '#c8a098',
+    innerColor: '#6b3835',
   },
   {
     id: 'temporal',
@@ -50,11 +52,10 @@ export const BRAIN_REGIONS = [
     skillTitle: 'Communication & Learning',
     skillDescription:
       'Technical writing, cross-team collaboration, mentoring, and rapidly absorbing new technologies. Translating complex ideas into clear language.',
-    position: [65, 25, 10],
-    popDirection: [45, 0, 8],
-    color: '#c4a090',       // warm beige-pink
-    innerColor: '#7e4238',  // deep red-brown interior
-    attenuationColor: '#c04038',
+    position: [0.028, -0.008, 0.045],
+    popDirection: [0.015, 0.0, 0.002],
+    color: '#c8a098',
+    innerColor: '#6b3835',
   },
   {
     id: 'cerebellum',
@@ -63,10 +64,9 @@ export const BRAIN_REGIONS = [
     skillTitle: 'Attention to Detail',
     skillDescription:
       'Code quality, systematic debugging, performance optimization, and pixel-perfect implementation. The last 5% that separates good from great.',
-    position: [0, -5, -55],
-    popDirection: [0, -30, -30],
-    color: '#b09088',       // slightly darker warm grey-pink
-    innerColor: '#6a3830',  // deep red-brown interior
-    attenuationColor: '#a83028',
+    position: [0.0, -0.035, 0.012],
+    popDirection: [0.0, -0.01, -0.008],
+    color: '#c8a098',
+    innerColor: '#6b3835',
   },
 ];

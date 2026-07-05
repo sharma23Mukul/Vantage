@@ -1,40 +1,33 @@
 import { useRef, useMemo, useCallback } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { useGLTF } from '@react-three/drei';
+import { useGLTF, Center } from '@react-three/drei';
 import * as THREE from 'three';
 import { BRAIN_REGIONS } from './brainRegionsData';
 import { useHotspotsStore } from '../../features/hotspots/model/useHotspotsStore';
 
 const ALL_CENTERS = BRAIN_REGIONS.map((r) => new THREE.Vector3(...r.position));
 
-// ─── GLSL noise functions for procedural surface detail ───
+// ─── Minimal GLSL: just noise for veins + wobble ───
 const NOISE_GLSL = `
-  float hash3(vec3 p) {
+  float vhash(vec3 p) {
     p = fract(p * vec3(0.1031, 0.1030, 0.0973));
     p += dot(p, p.yxz + 33.33);
     return fract((p.x + p.y) * p.z);
   }
-
   float vnoise(vec3 p) {
     vec3 i = floor(p);
     vec3 f = fract(p);
     f = f * f * (3.0 - 2.0 * f);
     return mix(
-      mix(mix(hash3(i), hash3(i + vec3(1,0,0)), f.x),
-          mix(hash3(i + vec3(0,1,0)), hash3(i + vec3(1,1,0)), f.x), f.y),
-      mix(mix(hash3(i + vec3(0,0,1)), hash3(i + vec3(1,0,1)), f.x),
-          mix(hash3(i + vec3(0,1,1)), hash3(i + vec3(1,1,1)), f.x), f.y), f.z
+      mix(mix(vhash(i), vhash(i+vec3(1,0,0)), f.x),
+          mix(vhash(i+vec3(0,1,0)), vhash(i+vec3(1,1,0)), f.x), f.y),
+      mix(mix(vhash(i+vec3(0,0,1)), vhash(i+vec3(1,0,1)), f.x),
+          mix(vhash(i+vec3(0,1,1)), vhash(i+vec3(1,1,1)), f.x), f.y), f.z
     );
   }
-
-  float fbm(vec3 p) {
-    float v = 0.0;
-    float a = 0.5;
-    for (int i = 0; i < 4; i++) {
-      v += a * vnoise(p);
-      p *= 2.1;
-      a *= 0.5;
-    }
+  float vfbm(vec3 p) {
+    float v = 0.0; float a = 0.5;
+    for (int i = 0; i < 4; i++) { v += a * vnoise(p); p *= 2.1; a *= 0.5; }
     return v;
   }
 `;
@@ -44,63 +37,93 @@ export function BrainModel() {
   const activeHotspot = useHotspotsStore((s) => s.activeHotspot);
   const clearActiveHotspot = useHotspotsStore((s) => s.clearActiveHotspot);
 
-  const { nodes } = useGLTF('/models/Brain.glb');
-  const geometry = nodes.brain1.geometry;
+  const { nodes, materials } = useGLTF('/models/stylizedbrain/scene.gltf');
+
+  // Find the mesh node
+  const brainMesh = useMemo(() => {
+    let mesh = null;
+    const root = nodes['Sketchfab_model'];
+    if (root) root.traverse((child) => { if (child.isMesh) mesh = child; });
+    if (!mesh) {
+      const key = Object.keys(nodes).find((k) => nodes[k].isMesh);
+      if (key) mesh = nodes[key];
+    }
+    return mesh;
+  }, [nodes]);
+
+  const geometry = brainMesh?.geometry;
+
+  // Extract the model's own textures — these have baked brain fold detail
+  const textures = useMemo(() => {
+    const mat = brainMesh?.material;
+    const fallbackKey = Object.keys(materials || {})[0];
+    const fallbackMat = fallbackKey ? materials[fallbackKey] : null;
+    return {
+      map: mat?.map || fallbackMat?.map || null,
+      normalMap: mat?.normalMap || fallbackMat?.normalMap || null,
+      roughnessMap: mat?.roughnessMap || fallbackMat?.roughnessMap || null,
+    };
+  }, [brainMesh, materials]);
 
   useFrame((state) => {
     if (!groupRef.current) return;
     const t = state.clock.elapsedTime;
-    groupRef.current.position.y = -0.5 + Math.sin(t * 0.4) * 0.03;
+    groupRef.current.position.y = Math.sin(t * 0.4) * 0.03;
     groupRef.current.rotation.y += 0.0008;
   });
+
+  if (!geometry) return null;
 
   return (
     <group
       ref={groupRef}
-      scale={0.024}
-      rotation={[0, -Math.PI / 2, 0]}
-      position={[0, -0.5, 0]}
+      position={[0, 0, 0]}
       onPointerMissed={() => clearActiveHotspot()}
     >
-      {BRAIN_REGIONS.map((region, index) => (
-        <BrainRegionMesh
-          key={region.id}
-          geometry={geometry}
-          region={region}
-          regionIndex={index}
-          isActive={activeHotspot?.id === region.id}
-          isOtherActive={activeHotspot !== null && activeHotspot?.id !== region.id}
-        />
-      ))}
+      <group scale={28} rotation={[-Math.PI / 2, 0, 0]}>
+        <Center>
+          {BRAIN_REGIONS.map((region, index) => (
+            <BrainRegionMesh
+              key={region.id}
+              geometry={geometry}
+              textures={textures}
+              region={region}
+              regionIndex={index}
+              isActive={activeHotspot?.id === region.id}
+              isOtherActive={activeHotspot !== null && activeHotspot?.id !== region.id}
+            />
+          ))}
+        </Center>
+      </group>
     </group>
   );
 }
 
 /**
- * Injects Voronoi clipping + procedural surface detail into PBR shader.
+ * Injects Voronoi clipping into a shader.
+ * hasColor: if true, also injects flesh tinting + veins into the color pass.
  */
-function injectVoronoiClipping(shader, region, otherCenters, extraFragCode = '') {
+function injectShader(shader, region, otherCenters, hasColor) {
   shader.uniforms.myCenter = { value: new THREE.Vector3(...region.position) };
   shader.uniforms.otherCenter0 = { value: otherCenters[0] };
   shader.uniforms.otherCenter1 = { value: otherCenters[1] };
   shader.uniforms.otherCenter2 = { value: otherCenters[2] };
   shader.uniforms.otherCenter3 = { value: otherCenters[3] };
+  shader.uniforms.uOpacity = { value: 1.0 };
 
-  // ── Vertex shader ──
+  // ── Vertex: pass model-space position ──
   shader.vertexShader = shader.vertexShader.replace(
     '#include <common>',
     `#include <common>
-     varying vec3 vLocalPos;
-     varying vec3 vWorldNormal;`
+     varying vec3 vLocalPos;`
   );
   shader.vertexShader = shader.vertexShader.replace(
     '#include <begin_vertex>',
     `#include <begin_vertex>
-     vLocalPos = position;
-     vWorldNormal = normalize((modelMatrix * vec4(normal, 0.0)).xyz);`
+     vLocalPos = position;`
   );
 
-  // ── Fragment shader: uniforms + noise ──
+  // ── Fragment: uniforms + noise ──
   shader.fragmentShader = shader.fragmentShader.replace(
     '#include <common>',
     `#include <common>
@@ -109,153 +132,144 @@ function injectVoronoiClipping(shader, region, otherCenters, extraFragCode = '')
      uniform vec3 otherCenter1;
      uniform vec3 otherCenter2;
      uniform vec3 otherCenter3;
+     uniform float uOpacity;
      varying vec3 vLocalPos;
-     varying vec3 vWorldNormal;
-     ${NOISE_GLSL}`
+     ${hasColor ? NOISE_GLSL : ''}`
   );
 
-  // ── Inject procedural color variation + visible veins ──
-  shader.fragmentShader = shader.fragmentShader.replace(
-    '#include <color_fragment>',
-    `#include <color_fragment>
-     // Base color variation — pinker near blood vessels, greyer elsewhere
-     float colorVar = fbm(vLocalPos * 0.06);
-     diffuseColor.rgb = mix(
-       diffuseColor.rgb,
-       diffuseColor.rgb * vec3(1.12, 0.85, 0.83),
-       colorVar * 0.3
-     );
+  // ── Fragment: Re-tint the baked texture to realistic flesh + add veins ──
+  if (hasColor) {
+    shader.fragmentShader = shader.fragmentShader.replace(
+      '#include <color_fragment>',
+      `#include <color_fragment>
 
-     // ── Visible vein network ──
-     // Large veins
-     vec3 veinPos1 = vLocalPos * 0.08;
-     float vein1 = fbm(veinPos1 + vec3(0.0, 100.0, 0.0));
-     float veinLine1 = 1.0 - smoothstep(0.0, 0.06, abs(vein1 - 0.5));
-     // Medium veins (higher frequency, offset)
-     vec3 veinPos2 = vLocalPos * 0.18 + vec3(30.0, 0.0, 50.0);
-     float vein2 = fbm(veinPos2);
-     float veinLine2 = 1.0 - smoothstep(0.0, 0.08, abs(vein2 - 0.48));
-     // Fine capillaries
-     vec3 veinPos3 = vLocalPos * 0.35 + vec3(70.0, 20.0, 0.0);
-     float vein3 = fbm(veinPos3);
-     float veinLine3 = 1.0 - smoothstep(0.0, 0.10, abs(vein3 - 0.52));
+       // The baked texture has colorful stylized regions.
+       // Convert to luminance to preserve the fold/shadow detail,
+       // then remap into a realistic flesh palette.
+       float lum = dot(diffuseColor.rgb, vec3(0.299, 0.587, 0.114));
 
-     // Combine veins: large=dark, medium=medium, fine=subtle
-     float totalVein = veinLine1 * 0.7 + veinLine2 * 0.4 + veinLine3 * 0.2;
-     totalVein = clamp(totalVein, 0.0, 1.0);
-     // Vein color: dark reddish-purple
-     vec3 veinColor = diffuseColor.rgb * vec3(0.35, 0.18, 0.22);
-     diffuseColor.rgb = mix(diffuseColor.rgb, veinColor, totalVein);
-    `
-  );
+       // Flesh gradient: dark blood-red in crevices → pinkish-tan on peaks
+       vec3 fleshDark  = vec3(0.30, 0.08, 0.07);  // deep sulcus
+       vec3 fleshMid   = vec3(0.72, 0.42, 0.38);  // mid-tone
+       vec3 fleshLight = vec3(0.88, 0.62, 0.55);  // peak of gyrus
 
-  // ── Inject procedural normal perturbation for wrinkly micro-texture ──
-  shader.fragmentShader = shader.fragmentShader.replace(
-    '#include <normal_fragment_maps>',
-    `#include <normal_fragment_maps>
-     // Procedural bump — wrinkly brain cortex micro-texture
-     float bumpScale = 0.4;
-     float eps = 0.3;
-     vec3 samplePos = vLocalPos * 0.2;
-     float dx = fbm(samplePos + vec3(eps, 0, 0)) - fbm(samplePos - vec3(eps, 0, 0));
-     float dy = fbm(samplePos + vec3(0, eps, 0)) - fbm(samplePos - vec3(0, eps, 0));
-     float dz = fbm(samplePos + vec3(0, 0, eps)) - fbm(samplePos - vec3(0, 0, eps));
-     normal = normalize(normal + vec3(dx, dy, dz) * bumpScale);`
-  );
+       vec3 fleshCol;
+       if (lum < 0.45) {
+         fleshCol = mix(fleshDark, fleshMid, smoothstep(0.05, 0.45, lum));
+       } else {
+         fleshCol = mix(fleshMid, fleshLight, smoothstep(0.45, 0.95, lum));
+       }
+       diffuseColor.rgb = fleshCol;
 
-  // ── Voronoi discard + fissure at the end ──
+       // ── Subtle vein network ──
+       vec3 vp = vLocalPos * 120.0;
+       float v1 = vfbm(vp * 0.5 + vec3(0.0, 80.0, 0.0));
+       float vLine1 = 1.0 - smoothstep(0.0, 0.04, abs(v1 - 0.5));
+       float v2 = vfbm(vp * 1.0 + vec3(25.0, 0.0, 40.0));
+       float vLine2 = 1.0 - smoothstep(0.0, 0.06, abs(v2 - 0.48));
+
+       float totalVein = vLine1 * 0.5 + vLine2 * 0.25;
+       totalVein = clamp(totalVein, 0.0, 1.0);
+       vec3 veinCol = vec3(0.25, 0.06, 0.08);
+       diffuseColor.rgb = mix(diffuseColor.rgb, veinCol, totalVein * 0.5);
+
+       // ── Mottling for organic variation ──
+       float mottle = vfbm(vp * 0.25 + 200.0);
+       diffuseColor.rgb *= mix(0.9, 1.1, mottle);
+      `
+    );
+  }
+
+  // ── Fragment: Voronoi region clipping ──
   shader.fragmentShader = shader.fragmentShader.replace(
     '#include <dithering_fragment>',
     `
-     // Voronoi lobe clipping
-     float myDist = distance(vLocalPos, myCenter);
-     if (distance(vLocalPos, otherCenter0) < myDist) discard;
-     if (distance(vLocalPos, otherCenter1) < myDist) discard;
-     if (distance(vLocalPos, otherCenter2) < myDist) discard;
-     if (distance(vLocalPos, otherCenter3) < myDist) discard;
+     // Organic wobble on boundary
+     ${hasColor ? `
+     vec3 wobble = vec3(
+       vnoise(vLocalPos * 150.0),
+       vnoise(vLocalPos * 150.0 + 10.0),
+       vnoise(vLocalPos * 150.0 + 20.0)
+     ) * 0.003;
+     vec3 cellPos = vLocalPos + wobble;
+     ` : `
+     vec3 cellPos = vLocalPos;
+     `}
 
-     // Deep sulcus fissure between lobes
-     float minOtherDist = min(
-       min(distance(vLocalPos, otherCenter0), distance(vLocalPos, otherCenter1)),
-       min(distance(vLocalPos, otherCenter2), distance(vLocalPos, otherCenter3))
+     float myDist = distance(cellPos, myCenter);
+     if (distance(cellPos, otherCenter0) < myDist) discard;
+     if (distance(cellPos, otherCenter1) < myDist) discard;
+     if (distance(cellPos, otherCenter2) < myDist) discard;
+     if (distance(cellPos, otherCenter3) < myDist) discard;
+
+     // Thin dark fissure at region boundaries
+     float minOD = min(
+       min(distance(cellPos, otherCenter0), distance(cellPos, otherCenter1)),
+       min(distance(cellPos, otherCenter2), distance(cellPos, otherCenter3))
      );
-     float edgeDist = abs(myDist - minOtherDist);
-     float sulcus = smoothstep(0.0, 14.0, edgeDist);
-     // Deep dark reddish-brown sulcus
-     vec3 sulcusColor = vec3(0.08, 0.02, 0.02);
-     gl_FragColor.rgb = mix(sulcusColor, gl_FragColor.rgb, sulcus);
+     float edgeDist = abs(myDist - minOD);
+     float sulcus = smoothstep(0.0, 0.002, edgeDist);
+     gl_FragColor.rgb = mix(vec3(0.12, 0.02, 0.02), gl_FragColor.rgb, sulcus);
 
-     ${extraFragCode}
+     gl_FragColor.a *= uOpacity;
 
      #include <dithering_fragment>
     `
   );
 }
 
-function BrainRegionMesh({ geometry, region, regionIndex, isActive, isOtherActive }) {
+function BrainRegionMesh({
+  geometry, textures, region, regionIndex, isActive, isOtherActive
+}) {
   const groupRef = useRef();
-  const outerMatRef = useRef(null);
-  const innerMatRef = useRef(null);
+  const outerShaderRef = useRef(null);
 
   const setActiveHotspot = useHotspotsStore((s) => s.setActiveHotspot);
   const clearActiveHotspot = useHotspotsStore((s) => s.clearActiveHotspot);
 
   const restPos = useMemo(() => new THREE.Vector3(0, 0, 0), []);
   const activePos = useMemo(() => new THREE.Vector3(...region.popDirection), [region]);
+  const otherCenters = useMemo(() => ALL_CENTERS.filter((_, i) => i !== regionIndex), [regionIndex]);
 
-  const otherCenters = useMemo(
-    () => ALL_CENTERS.filter((_, i) => i !== regionIndex),
-    [regionIndex]
-  );
-
-  // ── Outer: Matte organic brain cortex (less shiny) ──
+  // ── Outer material: matte organic flesh — NO glass/shine ──
   const outerMat = useMemo(() => {
-    const mat = new THREE.MeshPhysicalMaterial({
-      color: region.color,
-      roughness: 0.7,
+    const mat = new THREE.MeshStandardMaterial({
+      color: '#d4978e',
+      roughness: 0.85,         // Very rough — raw tissue
       metalness: 0.0,
-      clearcoat: 0.25,
-      clearcoatRoughness: 0.5,
-      emissive: new THREE.Color('#251010'),
+      emissive: new THREE.Color('#1a0606'),
       emissiveIntensity: 0.08,
-      envMapIntensity: 0.4,
+      envMapIntensity: 0.15,   // Barely any env reflection
       side: THREE.FrontSide,
       transparent: true,
       depthWrite: true,
     });
 
+    // Apply the model's baked textures
+    if (textures.map) mat.map = textures.map;
+    if (textures.normalMap) {
+      mat.normalMap = textures.normalMap;
+      mat.normalScale = new THREE.Vector2(1.8, 1.8); // boost for fold depth
+    }
+    if (textures.roughnessMap) mat.roughnessMap = textures.roughnessMap;
+
     mat.customProgramCacheKey = () => `outer_${region.id}`;
     mat.onBeforeCompile = (shader) => {
-      outerMatRef.current = shader;
-      shader.uniforms.uOpacity = { value: 1.0 };
-      shader.uniforms.uEmissiveBoost = { value: 0.0 };
-
-      injectVoronoiClipping(shader, region, otherCenters, `
-        gl_FragColor.a *= uOpacity;
-        gl_FragColor.rgb += vec3(uEmissiveBoost * 0.06);
-      `);
-
-      shader.fragmentShader = shader.fragmentShader.replace(
-        'uniform vec3 myCenter;',
-        `uniform vec3 myCenter;
-         uniform float uOpacity;
-         uniform float uEmissiveBoost;`
-      );
+      outerShaderRef.current = shader;
+      injectShader(shader, region, otherCenters, true);
     };
+    mat.needsUpdate = true;
 
     return mat;
-  }, [region, otherCenters]);
+  }, [region, otherCenters, textures]);
 
-  // ── Inner: Dark tissue interior (BackSide) ──
+  // ── Inner: dark tissue on BackSide ──
   const innerMat = useMemo(() => {
     const mat = new THREE.MeshPhysicalMaterial({
       color: region.innerColor,
-      roughness: 0.8,
-      metalness: 0.0,
-      clearcoat: 0.1,
-      clearcoatRoughness: 0.6,
-      emissive: new THREE.Color('#1a0606'),
-      emissiveIntensity: 0.15,
+      roughness: 0.85,
+      emissive: new THREE.Color('#140505'),
+      emissiveIntensity: 0.1,
       side: THREE.BackSide,
       transparent: true,
       depthWrite: true,
@@ -263,31 +277,19 @@ function BrainRegionMesh({ geometry, region, regionIndex, isActive, isOtherActiv
 
     mat.customProgramCacheKey = () => `inner_${region.id}`;
     mat.onBeforeCompile = (shader) => {
-      innerMatRef.current = shader;
-      shader.uniforms.uInnerOpacity = { value: 1.0 };
-
-      injectVoronoiClipping(shader, region, otherCenters, `
-        gl_FragColor.a *= uInnerOpacity;
-      `);
-
-      shader.fragmentShader = shader.fragmentShader.replace(
-        'uniform vec3 myCenter;',
-        `uniform vec3 myCenter;
-         uniform float uInnerOpacity;`
-      );
+      injectShader(shader, region, otherCenters, false);
     };
 
     return mat;
   }, [region, otherCenters]);
 
-  // ── Core: Solid filled interior (slightly smaller FrontSide mesh) ──
+  // ── Core: solid fill (slightly smaller) ──
   const coreMat = useMemo(() => {
     const mat = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color(region.innerColor).offsetHSL(0, 0.05, 0.05),
-      roughness: 0.9,
-      metalness: 0.0,
-      emissive: new THREE.Color('#180505'),
-      emissiveIntensity: 0.12,
+      color: new THREE.Color(region.innerColor).offsetHSL(0, 0.02, 0.04),
+      roughness: 0.92,
+      emissive: new THREE.Color('#100404'),
+      emissiveIntensity: 0.08,
       side: THREE.FrontSide,
       transparent: true,
       depthWrite: true,
@@ -295,17 +297,7 @@ function BrainRegionMesh({ geometry, region, regionIndex, isActive, isOtherActiv
 
     mat.customProgramCacheKey = () => `core_${region.id}`;
     mat.onBeforeCompile = (shader) => {
-      shader.uniforms.uCoreOpacity = { value: 1.0 };
-
-      injectVoronoiClipping(shader, region, otherCenters, `
-        gl_FragColor.a *= uCoreOpacity;
-      `);
-
-      shader.fragmentShader = shader.fragmentShader.replace(
-        'uniform vec3 myCenter;',
-        `uniform vec3 myCenter;
-         uniform float uCoreOpacity;`
-      );
+      injectShader(shader, region, otherCenters, false);
     };
 
     return mat;
@@ -315,28 +307,16 @@ function BrainRegionMesh({ geometry, region, regionIndex, isActive, isOtherActiv
     if (!groupRef.current) return;
     const t = delta * 3.0;
 
-    const targetPos = isActive ? activePos : restPos;
-    groupRef.current.position.lerp(targetPos, t);
+    groupRef.current.position.lerp(isActive ? activePos : restPos, t);
 
-    const targetScale = isActive ? 1.12 : 1.0;
-    const s = THREE.MathUtils.lerp(groupRef.current.scale.x, targetScale, t);
+    const ts = isActive ? 1.1 : 1.0;
+    const s = THREE.MathUtils.lerp(groupRef.current.scale.x, ts, t);
     groupRef.current.scale.setScalar(s);
 
-    if (outerMatRef.current) {
-      const targetOpacity = isActive ? 1.0 : isOtherActive ? 0.2 : 1.0;
-      outerMatRef.current.uniforms.uOpacity.value = THREE.MathUtils.lerp(
-        outerMatRef.current.uniforms.uOpacity.value, targetOpacity, t
-      );
-      const targetEmissive = isActive ? 1.0 : 0.0;
-      outerMatRef.current.uniforms.uEmissiveBoost.value = THREE.MathUtils.lerp(
-        outerMatRef.current.uniforms.uEmissiveBoost.value, targetEmissive, t
-      );
-    }
-
-    if (innerMatRef.current) {
-      const innerTarget = isOtherActive ? 0.2 : 1.0;
-      innerMatRef.current.uniforms.uInnerOpacity.value = THREE.MathUtils.lerp(
-        innerMatRef.current.uniforms.uInnerOpacity.value, innerTarget, t
+    if (outerShaderRef.current) {
+      const targetOp = isActive ? 1.0 : isOtherActive ? 0.2 : 1.0;
+      outerShaderRef.current.uniforms.uOpacity.value = THREE.MathUtils.lerp(
+        outerShaderRef.current.uniforms.uOpacity.value, targetOp, t
       );
     }
   });
@@ -355,14 +335,11 @@ function BrainRegionMesh({ geometry, region, regionIndex, isActive, isOtherActiv
 
   return (
     <group ref={groupRef}>
-      {/* Solid core fill (scaled down, fills the hollow interior) */}
       <mesh geometry={geometry} material={coreMat} scale={0.92} renderOrder={0} />
-      {/* Inner shell (BackSide) */}
       <mesh geometry={geometry} material={innerMat} renderOrder={1} />
-      {/* Outer cortex surface */}
       <mesh geometry={geometry} material={outerMat} onClick={handleClick} renderOrder={2} />
     </group>
   );
 }
 
-useGLTF.preload('/models/Brain.glb');
+useGLTF.preload('/models/stylizedbrain/scene.gltf');
