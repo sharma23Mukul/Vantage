@@ -3,8 +3,6 @@ import { useVariantStore } from '../model/useVariantStore';
 const VARIANTS = [
   { id: 'classic', color: '#ffcc00', label: 'Classic Yellow' },
   { id: 'crimson', color: '#e63946', label: 'Crimson Red' },
-  { id: 'teal', color: '#457b9d', label: 'Ocean Teal' },
-  { id: 'stealth', color: '#1d3557', label: 'Stealth Blue' },
 ];
 
 export function VariantSelector() {
