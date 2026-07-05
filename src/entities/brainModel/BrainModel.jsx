@@ -161,17 +161,28 @@ function injectShader(shader, region, otherCenters, hasColor) {
        }
        diffuseColor.rgb = fleshCol;
 
-       // ── Subtle vein network ──
+       // ── Visible vein network on outer surface ──
        vec3 vp = vLocalPos * 120.0;
-       float v1 = vfbm(vp * 0.5 + vec3(0.0, 80.0, 0.0));
-       float vLine1 = 1.0 - smoothstep(0.0, 0.04, abs(v1 - 0.5));
-       float v2 = vfbm(vp * 1.0 + vec3(25.0, 0.0, 40.0));
-       float vLine2 = 1.0 - smoothstep(0.0, 0.06, abs(v2 - 0.48));
 
-       float totalVein = vLine1 * 0.5 + vLine2 * 0.25;
+       // Large arteries — thick, prominent
+       float v1 = vfbm(vp * 0.4 + vec3(0.0, 80.0, 0.0));
+       float vLine1 = 1.0 - smoothstep(0.0, 0.025, abs(v1 - 0.5));
+
+       // Medium vessels — branching
+       float v2 = vfbm(vp * 0.8 + vec3(25.0, 0.0, 40.0));
+       float vLine2 = 1.0 - smoothstep(0.0, 0.035, abs(v2 - 0.48));
+
+       // Fine capillaries — thin web
+       float v3 = vfbm(vp * 1.6 + vec3(55.0, 15.0, 0.0));
+       float vLine3 = 1.0 - smoothstep(0.0, 0.045, abs(v3 - 0.52));
+
+       // Combine: arteries strongest, capillaries lightest
+       float totalVein = vLine1 * 0.7 + vLine2 * 0.4 + vLine3 * 0.2;
        totalVein = clamp(totalVein, 0.0, 1.0);
-       vec3 veinCol = vec3(0.25, 0.06, 0.08);
-       diffuseColor.rgb = mix(diffuseColor.rgb, veinCol, totalVein * 0.5);
+
+       // Dark blood-red vein color
+       vec3 veinCol = vec3(0.18, 0.02, 0.04);
+       diffuseColor.rgb = mix(diffuseColor.rgb, veinCol, totalVein * 0.8);
 
        // ── Mottling for organic variation ──
        float mottle = vfbm(vp * 0.25 + 200.0);
