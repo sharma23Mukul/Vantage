@@ -8,34 +8,37 @@ export function HotspotDetails() {
   if (!activeHotspot) return null;
 
   return (
-    <div className="absolute bottom-sp-4 md:bottom-sp-8 right-sp-4 md:right-sp-8 z-50 w-[90vw] md:w-[340px] bg-white/5 backdrop-blur-xl border border-white/10 p-sp-5 md:p-sp-6 rounded-2xl shadow-2xl pointer-events-auto transition-all duration-500">
+    <div 
+      className="absolute bottom-sp-4 md:bottom-sp-8 right-sp-4 md:right-sp-8 z-50 w-[90vw] md:w-[340px] bg-ink border-[3px] border-ink p-sp-5 md:p-sp-6 rounded-sm shadow-terracotta pointer-events-auto"
+      style={{ animation: 'slideUpFade 0.5s var(--ease-out-expo) forwards' }}
+    >
       {/* Region name */}
       <div className="flex justify-between items-start mb-sp-3">
-        <h3 className="font-oswald font-bold text-xl md:text-2xl uppercase text-text-primary leading-tight">
+        <h3 className="font-oswald font-black text-xl md:text-2xl uppercase text-bg-panel leading-tight">
           {activeHotspot.title}
         </h3>
         <button 
           onClick={clearActiveHotspot}
-          className="text-text-secondary hover:text-text-primary transition-colors bg-white/10 rounded-full p-1 ml-3 flex-shrink-0"
+          className="text-bg-panel hover:text-terracotta transition-colors bg-white/10 hover:bg-white/20 rounded-sm p-1 ml-3 flex-shrink-0"
           aria-label="Close details"
         >
           <X size={18} />
         </button>
       </div>
 
-      {/* Biology tagline */}
-      <p className="text-xs text-accent [text-shadow:_0_0_15px_currentColor] font-medium uppercase tracking-wider mb-sp-3">
+      {/* Biology tagline (Category Label - Sand) */}
+      <p className="font-oswald font-bold text-xs text-sand uppercase tracking-widest mb-sp-3">
         {activeHotspot.biology}
       </p>
 
       {/* Divider */}
-      <div className="w-full h-px bg-border/50 mb-sp-3" />
+      <div className="w-full h-[2px] bg-ink-soft/40 mb-sp-3" />
 
-      {/* Skill mapping */}
-      <p className="font-oswald font-bold text-base uppercase text-accent-warm [text-shadow:_0_0_15px_currentColor] mb-sp-2">
+      {/* Skill mapping (Section Label - Light Terracotta) */}
+      <p className="font-oswald font-bold text-xs text-[#e8a67e] uppercase tracking-widest mb-sp-2">
         {activeHotspot.skillTitle}
       </p>
-      <p className="text-sm text-slate-300 leading-relaxed">
+      <p className="text-sm text-bg-panel/90 font-medium leading-relaxed">
         {activeHotspot.description}
       </p>
     </div>

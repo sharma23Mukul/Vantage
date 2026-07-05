@@ -25,8 +25,8 @@ html {
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: var(--color-void);
-  color: var(--color-text-primary);
+  background-color: var(--color-bg);
+  color: var(--color-ink);
   line-height: 1.6;
   min-height: 100%;
   overflow-x: hidden;
@@ -59,8 +59,8 @@ canvas {
 }
 
 ::selection {
-  background-color: var(--color-accent);
-  color: white;
+  background-color: var(--color-terracotta);
+  color: var(--color-bg-panel);
 }
 
 /* kill all motion if user says so */
@@ -72,5 +72,16 @@ canvas {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

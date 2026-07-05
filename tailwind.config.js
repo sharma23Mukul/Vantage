@@ -4,14 +4,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        void: 'var(--color-void)',
-        surface: 'var(--color-surface)',
-        'surface-raised': 'var(--color-surface-raised)',
-        accent: 'var(--color-accent)',
-        'accent-warm': 'var(--color-accent-warm)',
-        'text-primary': 'var(--color-text-primary)',
-        'text-secondary': 'var(--color-text-secondary)',
-        border: 'var(--color-border)',
+        bg: 'var(--color-bg)',
+        'bg-panel': 'var(--color-bg-panel)',
+        ink: 'var(--color-ink)',
+        'ink-soft': 'var(--color-ink-soft)',
+        terracotta: 'var(--color-terracotta)',
+        'terracotta-dark': 'var(--color-terracotta-dark)',
+        olive: 'var(--color-olive)',
+        sand: 'var(--color-sand)',
       },
       spacing: {
         'sp-1': 'var(--space-1)',
@@ -27,6 +27,12 @@ export default {
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
         oswald: ['Oswald', 'Impact', 'sans-serif'],
+      },
+      boxShadow: {
+        sm: 'var(--shadow-sm)',
+        md: 'var(--shadow-md)',
+        hard: 'var(--shadow-hard)',
+        terracotta: 'var(--shadow-terracotta)',
       },
       fontSize: {
         xs: 'var(--text-xs)',
