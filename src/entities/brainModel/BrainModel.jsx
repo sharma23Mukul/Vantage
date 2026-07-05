@@ -149,7 +149,7 @@ function injectShader(shader, region, otherCenters, hasColor) {
        float lum = dot(diffuseColor.rgb, vec3(0.299, 0.587, 0.114));
 
        // Flesh gradient: dark blood-red in crevices → pinkish-tan on peaks
-       vec3 fleshDark  = vec3(0.30, 0.08, 0.07);  // deep sulcus
+       vec3 fleshDark  = vec3(0.15, 0.02, 0.02);  // deep, very dark sulcus for prominent folds
        vec3 fleshMid   = vec3(0.72, 0.42, 0.38);  // mid-tone
        vec3 fleshLight = vec3(0.88, 0.62, 0.55);  // peak of gyrus
 
@@ -260,7 +260,7 @@ function BrainRegionMesh({
     if (textures.map) mat.map = textures.map;
     if (textures.normalMap) {
       mat.normalMap = textures.normalMap;
-      mat.normalScale = new THREE.Vector2(1.8, 1.8); // boost for fold depth
+      mat.normalScale = new THREE.Vector2(3.5, 3.5); // drastically boost for prominent fold depth
     }
     if (textures.roughnessMap) mat.roughnessMap = textures.roughnessMap;
 
