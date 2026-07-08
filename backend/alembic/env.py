@@ -3,6 +3,10 @@ from logging.config import fileConfig
 from sqlalchemy.ext.asyncio import create_async_engine
 from alembic import context
 
+import os
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+
 from app.models.base import Base
 from app.models import Product, Scene, Material, AnalyticsEvent  # noqa: F401
 from app.core.config import get_settings
