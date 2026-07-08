@@ -38,7 +38,7 @@ export function HotspotDetails() {
       <p className="font-oswald font-bold text-xs text-[#e8a67e] uppercase tracking-widest mb-sp-2">
         {activeHotspot.skillTitle}
       </p>
-      <p className="text-sm text-bg-panel/90 font-medium leading-relaxed">
+      <p className="text-sm text-bg-panel opacity-90 font-medium leading-relaxed">
         {activeHotspot.description}
       </p>
     </div>
