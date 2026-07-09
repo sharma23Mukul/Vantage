@@ -27,3 +27,8 @@ Thumbs.db
 
 # Testing
 coverage/
+
+# Python
+__pycache__/
+venv/
+.pytest_cache/
