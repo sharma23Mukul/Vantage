@@ -1,14 +1,27 @@
+[![CI](https://github.com/sharma23Mukul/Vantage/actions/workflows/ci.yml/badge.svg)](https://github.com/sharma23Mukul/Vantage/actions/workflows/ci.yml)
+
 # Dimension
 
-Interactive 3D product showcase platform built with React, Three.js, and GSAP.
+<!-- TODO: add live demo link once deployed -->
+<!-- **[Live Demo →](https://your-domain.com)** -->
+
+An interactive 3D portfolio that maps developer skills onto a realistic brain model — click on brain regions to explore competencies like system architecture, visual craft, and technical engineering. Built as a single-page React app with real-time WebGL rendering, scroll-driven camera animation, and a terracotta-and-sand poster aesthetic that breaks from the typical dark-mode developer portfolio.
+
+<!-- TODO: add demo GIF or screenshot at docs/demo.gif — capture the brain model with a hotspot tooltip open -->
 
 ## Stack
 
-- **Build:** Vite
-- **UI:** React 18, Tailwind CSS, Framer Motion
-- **3D:** Three.js, React Three Fiber, Drei
-- **Animation:** GSAP + ScrollTrigger
-- **State:** Zustand
+| Layer | Technologies |
+|-------|-------------|
+| **Build** | Vite |
+| **UI** | React 19, Tailwind CSS |
+| **3D** | Three.js, React Three Fiber, Drei |
+| **Animation** | GSAP + ScrollTrigger |
+| **State** | Zustand |
+| **Testing** | Vitest, React Testing Library |
+| **CI** | GitHub Actions |
+
+> **Animation note:** GSAP + ScrollTrigger drives all scroll-linked camera movement and page-level timeline sequences. Framer Motion is listed as a dependency but is not currently imported in the source — all motion is handled by GSAP and CSS keyframes.
 
 ## Features
 
@@ -55,4 +68,5 @@ src/
 | `npm run dev` | Start dev server |
 | `npm run build` | Production build |
 | `npm run lint` | Run ESLint |
+| `npm run test` | Run Vitest test suite |
 | `npm run preview` | Preview production build |
