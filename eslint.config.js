@@ -19,6 +19,10 @@ export default defineConfig([
     },
     rules: {
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      // Three.js/R3F patterns (Math.random in useMemo, texture mutation in
+      // useEffect) are standard but trip the strict hooks purity checks.
+      'react-hooks/purity': 'warn',
+      'react-hooks/immutability': 'warn',
     },
   },
 ]);

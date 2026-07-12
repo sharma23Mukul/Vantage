@@ -1,11 +1,11 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { create } from 'zustand';
 
 // Create a standalone store with the same shape as the real one, but without
 // the API imports that require import.meta.env (Vite-only).
 // This tests the pure state logic — setters, initial values, clearApiError.
 function createTestStore() {
-  return create((set, get) => ({
+  return create((set) => ({
     // UI Slice
     isLoading: true,
     loaderProgress: 0,
