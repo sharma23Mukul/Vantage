@@ -35,7 +35,7 @@ export function HotspotDetails() {
       <div className="w-full h-[2px] bg-ink-soft/40 mb-sp-3" />
 
       {/* Skill mapping (Section Label - Light Terracotta) */}
-      <p className="font-oswald font-bold text-xs text-[#e8a67e] uppercase tracking-widest mb-sp-2">
+      <p className="font-oswald font-bold text-xs text-[#E8789A] uppercase tracking-widest mb-sp-2">
         {activeHotspot.skillTitle}
       </p>
       <p className="text-sm text-bg-panel opacity-90 font-medium leading-relaxed">

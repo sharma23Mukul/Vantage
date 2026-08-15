@@ -1,13 +1,14 @@
 :root {
-  /* Colors — Light Poster palette */
-  --color-bg: #f6f2ea;
+  /* Colors — Pink Poster palette */
+  --color-bg: #FFF7EB;
   --color-bg-panel: #ffffff;
   --color-ink: #191712;
   --color-ink-soft: #5c564c;
-  --color-terracotta: #c05a3a;
-  --color-terracotta-dark: #8f3f27;
-  --color-olive: #6b7048;
-  --color-sand: #e4d9c4;
+  --color-terracotta: #CC3A63;
+  --color-terracotta-dark: #9B2048;
+  --color-olive: #A2AB73;
+  --color-sand: #F9F0E0;
+  --color-accent: #CC3A63;
 
   /* Spacing (8pt grid) */
   --space-1: 4px;
