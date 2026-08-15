@@ -12,7 +12,7 @@ export default function ShowcasePage() {
           MS
         </h1>
         <span className="font-oswald font-bold uppercase tracking-widest pointer-events-auto text-bg-panel bg-terracotta px-3 py-1 text-xs md:text-sm border-[2px] border-terracotta shadow-sm">
-          Portfolio '25
+          Portfolio '26
         </span>
       </header>
 
